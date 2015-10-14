@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+
+
+
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/control_bar"
+        android:padding="20dp"
+        android:layout_alignParentBottom="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/button_play"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/play_button"/>
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/button_play"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+
+    <TextView
+        android:id="@+id/textView_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:text="Artist"
+        android:textColor="@android:color/white"
+        android:layout_above="@id/control_bar"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+    <TextView
+        android:id="@+id/textView_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:text="Song"
+        android:textColor="@android:color/white"
+        android:layout_above="@id/textView_artist"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+
+</RelativeLayout>
