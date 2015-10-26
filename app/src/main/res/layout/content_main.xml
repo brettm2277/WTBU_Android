@@ -9,63 +9,58 @@
     tools:showIn="@layout/app_bar_main">
 
 
-
-
-
-
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/control_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/control_bar"
+        android:layout_alignParentBottom="true"
         android:padding="20dp"
-        android:layout_alignParentBottom="true">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/button_play"
+                android:id="@+id/buttonPlay"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:src="@drawable/play_button"/>
+                android:src="@drawable/play_button" />
 
             <SeekBar
-                android:id="@+id/seekBar"
+                android:id="@+id/volumeBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/button_play"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/buttonPlay"
                 android:paddingLeft="20dp"
-                android:paddingStart="20dp"
-                android:layout_centerVertical="true"/>
+                android:paddingStart="20dp" />
 
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
-
 
 
     <TextView
         android:id="@+id/textView_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/control_bar"
         android:paddingLeft="20dp"
         android:paddingStart="20dp"
         android:text="Artist"
-        android:textColor="@android:color/white"
-        android:layout_above="@id/control_bar"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/textView_song"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/textView_artist"
         android:paddingLeft="20dp"
         android:paddingStart="20dp"
         android:text="Song"
-        android:textColor="@android:color/white"
-        android:layout_above="@id/textView_artist"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@android:color/white" />
 
 
 </RelativeLayout>

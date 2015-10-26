@@ -1,20 +1,30 @@
 package org.globalappinitiative.wtbutest;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    ImageView buttonPlay;
+    SeekBar volumeBar;
+    boolean playing = false;
+
+    private MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,54 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        initializeUI();
+        initializeMediaPlayer();
+    }
+
+    private void initializeUI()
+    {
+        buttonPlay = (ImageView) findViewById(R.id.buttonPlay);
+        buttonPlay.setOnClickListener(this);
+        volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+    }
+
+    private void initializeMediaPlayer() {
+        player = new MediaPlayer();
+        try {
+            player.setDataSource("http://wtbu.bu.edu:1800/listen");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Error", e.toString());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("Error", e.toString());
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            Log.e("Error", e.toString());
+        }
+    }
+
+    private void startPlaying() {
+        try {
+            player.prepareAsync();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                player.start();
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (player.isPlaying()) {
+            player.stop();
+        }
     }
 
     @Override
@@ -88,5 +146,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view == buttonPlay) {
+            startPlaying();
+        }
     }
 }
