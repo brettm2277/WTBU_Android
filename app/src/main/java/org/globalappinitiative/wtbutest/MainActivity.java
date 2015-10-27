@@ -1,5 +1,7 @@
 package org.globalappinitiative.wtbutest;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -20,19 +22,24 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    ImageView buttonPlay;
-    SeekBar volumeBar;
-    boolean playing = false;
+    private boolean playing = false;    //switches between true and false depending on whether or not the stream is currently playing
 
-    private MediaPlayer player;
+    private ImageView buttonPlay;       //play button
+    private SeekBar volumeBar;          //volume bar
 
+    private MediaPlayer player;         //handles the streaming
+    private AudioManager audioManager;  //allows for changing the volume
+
+
+    //onCreate runs when app first starts//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_main);                         //set the interface to the xml file activity_main
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);         //initialize the toolbar at the top
+        setSupportActionBar(toolbar);                                   //allows the toolbar to have the capabilities of an action bar
 
+        //////////////////navigation drawer stuff//////////////////
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -41,16 +48,30 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        ///////////////////////////////////////////////////////////
 
-        initializeUI();
-        initializeMediaPlayer();
+        initializeUI();                 //initializes the features of the buttons and volume slider
+        initializeMediaPlayer();        //initializes the media player which handles the streaming
     }
 
     private void initializeUI()
     {
-        buttonPlay = (ImageView) findViewById(R.id.buttonPlay);
-        buttonPlay.setOnClickListener(this);
-        volumeBar = (SeekBar) findViewById(R.id.volumeBar);
+        buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
+        buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
+        volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i/6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     private void initializeMediaPlayer() {
@@ -78,16 +99,19 @@ public class MainActivity extends AppCompatActivity
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
+                playing = true;
                 player.start();
             }
         });
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (player.isPlaying()) {
+    private void stopPlaying() {
+        if (player.isPlaying())
+        {
             player.stop();
+            player.release();
+            initializeMediaPlayer();
+            playing = false;
         }
     }
 
@@ -123,6 +147,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //created by navigation drawer template. we can change it later for whatever we put in it
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -150,8 +175,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if (view == buttonPlay) {
+        if (view == buttonPlay && !playing) {
             startPlaying();
+        }
+        else if (view == buttonPlay && playing) {
+            stopPlaying();
         }
     }
 }
