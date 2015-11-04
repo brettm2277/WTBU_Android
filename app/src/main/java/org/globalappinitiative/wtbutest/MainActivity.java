@@ -1,5 +1,6 @@
 package org.globalappinitiative.wtbutest;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -16,13 +17,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private boolean playing = false;    //switches between true and false depending on whether or not the stream is currently playing
+    private boolean ready_to_play = false;
 
     private ImageView buttonPlay;       //play button
     private SeekBar volumeBar;          //volume bar
@@ -30,6 +39,7 @@ public class MainActivity extends AppCompatActivity
     private MediaPlayer player;         //handles the streaming
     private AudioManager audioManager;  //allows for changing the volume
 
+    private TextView textViewtest;
 
     //onCreate runs when app first starts//
     @Override
@@ -58,8 +68,11 @@ public class MainActivity extends AppCompatActivity
     {
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
+        int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
+        volumeBar.setProgress(current_volume * 7);
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
@@ -72,7 +85,32 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+
+        textViewtest = (TextView) findViewById(R.id.textView_test);
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="https://spinitron.com/radio/rss.php?station=wtbu";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        textViewtest.setText("Response is: "+ response.substring(0,500));
+                        Log.d("Text", response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                textViewtest.setText("That didn't work!");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
+
+
 
     private void initializeMediaPlayer() {
         player = new MediaPlayer();
@@ -88,6 +126,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
             Log.e("Error", e.toString());
         }
+
     }
 
     private void startPlaying() {
@@ -96,11 +135,21 @@ public class MainActivity extends AppCompatActivity
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Stream...");
+        progressDialog.show();
+
         player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                playing = true;
+                progressDialog.hide();
                 player.start();
+            }
+        });
+        player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                textViewtest.setText(Integer.toString(percent));
             }
         });
     }
@@ -111,7 +160,7 @@ public class MainActivity extends AppCompatActivity
             player.stop();
             player.release();
             initializeMediaPlayer();
-            playing = false;
+            ready_to_play = false;
         }
     }
 
@@ -154,17 +203,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_playing) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_schedule) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_chat) {
 
         }
 
@@ -175,10 +222,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if (view == buttonPlay && !playing) {
+        if (view == buttonPlay && !player.isPlaying()) {
             startPlaying();
         }
-        else if (view == buttonPlay && playing) {
+        if (view == buttonPlay && player.isPlaying()) {
             stopPlaying();
         }
     }

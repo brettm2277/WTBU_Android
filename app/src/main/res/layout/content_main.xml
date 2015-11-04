@@ -39,6 +39,12 @@
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:id="@+id/textView_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/textView_artist"
