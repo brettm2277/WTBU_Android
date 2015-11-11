@@ -1,9 +1,11 @@
 package org.globalappinitiative.wtbutest;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by evanbowman on 11/10/15.
  */
-import java.util.*;
 
 class Song {
     private String songTitle;			// A string to store the song title

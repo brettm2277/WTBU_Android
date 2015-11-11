@@ -2,6 +2,7 @@ package org.globalappinitiative.wtbutest;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.globalappinitiative.wtbutest.Parser;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,6 +30,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView buttonPlay;       //play button
     private SeekBar volumeBar;          //volume bar
 
-    private MediaPlayer player;         //handles the streaming
+    public MediaPlayer player;         //handles the streaming
     private AudioManager audioManager;  //allows for changing the volume
 
     private TextView textViewtest;
@@ -97,8 +103,15 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        textViewtest.setText("Response is: "+ response.substring(0,500));
-                        Log.d("Text", response);
+                        List<Song> songLog = new ArrayList<Song>();
+                        Parser parser = new Parser();
+                        songLog = parser.parse(response, songLog);
+                        String s = "";
+                        for (int i=0; i<songLog.size(); i++)
+                        {
+                            s = s + songLog.get(i).getArtist() + "\n";
+                        }
+                        textViewtest.setText(s);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -206,6 +219,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_playing) {
 
         } else if (id == R.id.nav_schedule) {
+            Intent intent = new Intent(this, Schedule.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_history) {
 
