@@ -1,10 +1,8 @@
 package org.globalappinitiative.wtbutest;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.parse.ParseObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +32,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private boolean ready_to_play = false;
-
     private ImageView buttonPlay;       //play button
+    private ImageView buttonPause;      //pause button
     private SeekBar volumeBar;          //volume bar
 
-    public MediaPlayer player;         //handles the streaming
     private AudioManager audioManager;  //allows for changing the volume
 
     private TextView textViewtest;
@@ -51,13 +45,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //ParseObject testObject = new ParseObject("TestObject");
-        //testObject.put("foo", "bar");
-        //testObject.saveInBackground();
-
         setContentView(R.layout.activity_main);                         //set the interface to the xml file activity_main
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);         //initialize the toolbar at the top
         setSupportActionBar(toolbar);                                   //allows the toolbar to have the capabilities of an action bar
+
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
         //////////////////navigation drawer stuff//////////////////
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,13 +63,23 @@ public class MainActivity extends AppCompatActivity
         ///////////////////////////////////////////////////////////
 
         initializeUI();                 //initializes the features of the buttons and volume slider
-        initializeMediaPlayer();        //initializes the media player which handles the streaming
     }
 
-    private void initializeUI()
-    {
+    private void initializeUI() {
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
+
+        buttonPause = (ImageView) findViewById(R.id.buttonPause);
+        buttonPause.setOnClickListener(this);
+
+        //check whether or not the audio is currently playing
+        if (((MyApplication) this.getApplication()).isPlaying()) {                  //If audio already playing, show pause button
+            buttonPlay.setVisibility(View.INVISIBLE);
+            buttonPause.setVisibility(View.VISIBLE);
+        } else {                                                                    //If audio not playing yet, show play button
+            buttonPlay.setVisibility(View.VISIBLE);
+            buttonPause.setVisibility(View.INVISIBLE);
+        }
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
         int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -86,20 +88,22 @@ public class MainActivity extends AppCompatActivity
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i/6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i / 6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
 
         textViewtest = (TextView) findViewById(R.id.textView_test);
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://spinitron.com/radio/rss.php?station=wtbu";
+        String url = "https://spinitron.com/radio/rss.php?station=wtbu";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -107,12 +111,11 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        List<Song> songLog = new ArrayList<Song>();
+                        List<Song> songLog = new ArrayList<>();
                         Parser parser = new Parser();
                         songLog = parser.parse(response, songLog);
                         String s = "";
-                        for (int i=0; i<songLog.size(); i++)
-                        {
+                        for (int i = 0; i < songLog.size(); i++) {
                             s = s + songLog.get(i).getArtist() + "\n";
                         }
                         textViewtest.setText(s);
@@ -127,60 +130,6 @@ public class MainActivity extends AppCompatActivity
         queue.add(stringRequest);
     }
 
-
-
-    private void initializeMediaPlayer() {
-        player = new MediaPlayer();
-        try {
-            player.setDataSource("http://wtbu.bu.edu:1800/listen");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.e("Error", e.toString());
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Log.e("Error", e.toString());
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            Log.e("Error", e.toString());
-        }
-
-    }
-
-    private void startPlaying() {
-        try {
-            player.prepareAsync();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Stream...");
-        progressDialog.show();
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                progressDialog.hide();
-                player.start();
-            }
-        });
-        player.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                textViewtest.setText(Integer.toString(percent));
-            }
-        });
-    }
-
-    private void stopPlaying() {
-        if (player.isPlaying())
-        {
-            player.stop();
-            player.release();
-            initializeMediaPlayer();
-            ready_to_play = false;
-        }
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -188,6 +137,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+
         }
     }
 
@@ -241,11 +191,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if (view == buttonPlay && !player.isPlaying()) {
-            startPlaying();
+        if (view == buttonPlay) {
+            ((MyApplication) this.getApplication()).startPlaying(this);
+            buttonPlay.setVisibility(View.INVISIBLE);
+            buttonPause.setVisibility(View.VISIBLE);
         }
-        if (view == buttonPlay && player.isPlaying()) {
-            stopPlaying();
+        if (view == buttonPause) {
+            ((MyApplication) this.getApplication()).stopPlaying();
+            buttonPlay.setVisibility(View.VISIBLE);
+            buttonPause.setVisibility(View.INVISIBLE);
         }
     }
+
+/*    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super();
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) || keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            volumeBar.setProgress(current_volume * 7);
+        }
+        return true;
+    }
+*/
 }

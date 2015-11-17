@@ -1,28 +1,37 @@
 package org.globalappinitiative.wtbutest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 
-public class Schedule extends MainActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Schedule extends MainActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    private ImageView buttonPlay;       //play button
+    private ImageView buttonPause;      //pause button
+    private SeekBar volumeBar;          //volume bar
+
+    private AudioManager audioManager;  //allows for changing the volume
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
 
         //////////////////navigation drawer stuff//////////////////
@@ -36,6 +45,46 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
 
+        initializeUI();
+    }
+
+    private void initializeUI()
+    {
+        buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
+        buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
+
+        buttonPause = (ImageView) findViewById(R.id.buttonPause);
+        buttonPause.setOnClickListener(this);
+
+        if (((MyApplication) this.getApplication()).isPlaying())
+        {
+            buttonPlay.setVisibility(View.INVISIBLE);
+            buttonPause.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            buttonPlay.setVisibility(View.VISIBLE);
+            buttonPause.setVisibility(View.INVISIBLE);
+        }
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
+        int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
+        volumeBar.setProgress(current_volume * 7);
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i / 6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     @Override
@@ -96,4 +145,17 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         return true;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == buttonPlay) {
+            ((MyApplication) this.getApplication()).startPlaying(this);
+            buttonPlay.setVisibility(View.INVISIBLE);
+            buttonPause.setVisibility(View.VISIBLE);
+        }
+        if (view == buttonPause) {
+            ((MyApplication) this.getApplication()).stopPlaying();
+            buttonPlay.setVisibility(View.VISIBLE);
+            buttonPause.setVisibility(View.INVISIBLE);
+        }
+    }
 }

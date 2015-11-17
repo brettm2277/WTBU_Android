@@ -26,6 +26,13 @@
                 android:layout_height="75dp"
                 android:src="@drawable/play_button" />
 
+            <ImageView
+                android:id="@+id/buttonPause"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/pause_button"
+                android:visibility="invisible"/>
+
             <SeekBar
                 android:id="@+id/volumeBar"
                 android:layout_width="match_parent"

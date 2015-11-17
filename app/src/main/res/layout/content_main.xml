@@ -27,6 +27,13 @@
                 android:layout_height="75dp"
                 android:src="@drawable/play_button" />
 
+            <ImageView
+                android:id="@+id/buttonPause"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/pause_button"
+                android:visibility="invisible"/>
+
             <SeekBar
                 android:id="@+id/volumeBar"
                 android:layout_width="match_parent"
@@ -45,28 +52,6 @@
         android:layout_height="wrap_content"
         android:text="test"
         android:textColor="@android:color/white"/>
-
-    <TextView
-        android:id="@+id/textView_artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/control_bar"
-        android:paddingLeft="20dp"
-        android:paddingStart="20dp"
-        android:text="Artist"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@android:color/white" />
-
-    <TextView
-        android:id="@+id/textView_song"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textView_artist"
-        android:paddingLeft="20dp"
-        android:paddingStart="20dp"
-        android:text="Song"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@android:color/white" />
 
 
 </RelativeLayout>
