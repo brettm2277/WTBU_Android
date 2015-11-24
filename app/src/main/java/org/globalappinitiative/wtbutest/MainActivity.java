@@ -2,6 +2,7 @@ package org.globalappinitiative.wtbutest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +24,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +46,10 @@ public class MainActivity extends AppCompatActivity
     private AudioManager audioManager;  //allows for changing the volume
 
     private TextView textViewtest;
+
+    private ImageView album_art;
+
+    RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
 
     //onCreate runs when app first starts//
     @Override
@@ -66,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeUI() {
+        album_art = (ImageView) findViewById(R.id.album_art);
+
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
 
@@ -102,11 +115,11 @@ public class MainActivity extends AppCompatActivity
 
         textViewtest = (TextView) findViewById(R.id.textView_test);
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://spinitron.com/radio/rss.php?station=wtbu";
+        queue = Volley.newRequestQueue(this);
+        String url = "https://spinitron.com/radio/rss.php?station=wtbu";        //rss feed gives us list of recently played songs. need something more up to date
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,    //use volley to make request to get rss feed data
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -115,19 +128,73 @@ public class MainActivity extends AppCompatActivity
                         Parser parser = new Parser();
                         songLog = parser.parse(response, songLog);
                         String s = "";
-                        for (int i = 0; i < songLog.size(); i++) {
-                            s = s + songLog.get(i).getArtist() + "\n";
+                        for (int i = songLog.size()-1; i >= 0; i--) {
+                            s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
                         }
                         textViewtest.setText(s);
+
+                        String current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&");    //get most recent artist
+                        String current_title = songLog.get(songLog.size()-1).getTitle();                            //get most recent song
+                        getAlbumArtURL(current_artist, current_title);                                              //get the url for the album artwork for this song
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textViewtest.setText("That didn't work!");
+                Log.e("VolleyError", error.toString());
             }
         });
         // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        queue.add(stringRequest);       //add the request to the queue
+    }
+
+    private void getAlbumArtURL(String current_artist, String current_title)        //uses the free iTunes api to get album artwork url
+    {
+        String artist_and_title = current_artist + " " + current_title;
+        String url = "https://itunes.apple.com/search?term=" + artist_and_title.replaceAll(" ", "+");   //add artist and title to url
+        Log.d("URL", url);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,        //use volley to make a string request
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);           //iTunes api gives data back in json format, this parses it
+                            JSONArray results = jsonObject.getJSONArray("results");
+                            JSONObject res = results.getJSONObject(0);
+                            String artwork_url = res.getString("artworkUrl100");
+                            int index = artwork_url.indexOf("100x100bb.jpg");
+                            artwork_url = artwork_url.substring(0, index) + "1200x1200bb.jpg";        //artwork_url contains image of album artwork
+                            Log.d("Artwork URL", artwork_url);
+                            getAlbumArt(artwork_url);                                 //need to make another request using volley to actually get the image
+                        } catch (JSONException e) {
+                            Log.e("JSON error", e.toString());
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("VolleyError", error.toString());
+            }
+        });
+        queue.add(stringRequest);       //add the request to the queue
+    }
+
+    private void getAlbumArt(String url)    //make request using volley to actually download the album art
+    {
+        //url is the url for the album art given by the iTunes api
+        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {        //says ImageRequest is deprecated although it still works. May need a different solution
+            @Override
+            public void onResponse(Bitmap response) {
+                album_art.setImageBitmap(response);         //set image with album art if it worked
+            }
+        }, 0, 0, null,
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        queue.add(imageRequest);
     }
 
     @Override

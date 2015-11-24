@@ -9,11 +9,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 public class Schedule extends MainActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
@@ -26,6 +32,25 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        //grab schedule from parse
+        //all we have here is pulling the genre from the first show.
+        //just replace the first parameter of getInBackground with the ID of whichever show is desired from parse
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("WTBU");
+        query.getInBackground("wxAqbgBlmp", new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    String genre = object.get("genre").toString();
+                    Log.d("Genre", genre);
+                } else {
+                    // something went wrong
+                    Log.d("Parse", "error");
+                }
+            }
+        });
+
+
 
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
