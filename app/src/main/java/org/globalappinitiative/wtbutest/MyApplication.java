@@ -43,25 +43,27 @@ public class MyApplication extends Application {
 
     public void startPlaying(Context context) {
         //prepare media player
-        try {
-            player.prepareAsync();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-
-        //show progress dialog while it's loading
-        final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading Stream...");
-        progressDialog.show();
-
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                //once it's loaded, close progress dialog and start player
-                progressDialog.hide();
-                player.start();
+        if (!player.isPlaying()) {
+            try {
+                player.prepareAsync();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
             }
-        });
+
+            //show progress dialog while it's loading
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Loading Stream...");
+            progressDialog.show();
+
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    //once it's loaded, close progress dialog and start player
+                    progressDialog.hide();
+                    player.start();
+                }
+            });
+        }
     }
 
     public void stopPlaying() {

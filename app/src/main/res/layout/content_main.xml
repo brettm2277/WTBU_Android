@@ -9,11 +9,14 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <ImageView
-        android:id="@+id/album_art"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/textView_artist_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@android:color/white" />
 
 
     <android.support.design.widget.AppBarLayout
@@ -53,14 +56,12 @@
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/textView_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"
-        android:visibility="gone"
-        android:textColor="@android:color/white"/>
-
-
+    <ImageView
+        android:id="@+id/album_art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/control_bar"
+        android:layout_below="@id/textView_artist_song"/>
 
 </RelativeLayout>

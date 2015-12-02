@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,11 +47,13 @@ public class MainActivity extends AppCompatActivity
 
     private AudioManager audioManager;  //allows for changing the volume
 
-    private TextView textViewtest;
+    private TextView textView_artist_song;
 
     private ImageView album_art;
 
     RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
+
+    Handler handler = new Handler();    //used with the auto refresh runnable
 
     //onCreate runs when app first starts//
     @Override
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity
         ///////////////////////////////////////////////////////////
 
         initializeUI();                 //initializes the features of the buttons and volume slider
+
+        getRSSData();
+
+        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
     private void initializeUI() {
@@ -113,9 +121,14 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        textViewtest = (TextView) findViewById(R.id.textView_test);
+        textView_artist_song = (TextView) findViewById(R.id.textView_artist_song);
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
+
+    }
+
+    private void getRSSData()
+    {
         String url = "https://spinitron.com/radio/rss.php?station=wtbu";        //rss feed gives us list of recently played songs. need something more up to date
 
         // Request a string response from the provided URL.
@@ -131,10 +144,13 @@ public class MainActivity extends AppCompatActivity
                         for (int i = songLog.size()-1; i >= 0; i--) {
                             s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
                         }
-                        textViewtest.setText(s);
 
-                        String current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&");    //get most recent artist
-                        String current_title = songLog.get(songLog.size()-1).getTitle();                            //get most recent song
+                        String artist_and_title = songLog.get(songLog.size() - 1).getArtist().replace("&amp;", "&") + " - " + songLog.get(songLog.size()-1).getTitle();
+
+                        textView_artist_song.setText(artist_and_title);
+
+                        String current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
+                        String current_title = songLog.get(songLog.size()-1).getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");                            //get most recent song
                         getAlbumArtURL(current_artist, current_title);                                              //get the url for the album artwork for this song
                     }
                 }, new Response.ErrorListener() {
@@ -197,6 +213,14 @@ public class MainActivity extends AppCompatActivity
         queue.add(imageRequest);
     }
 
+    public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
+        @Override
+        public void run() {
+            getRSSData();   //gets RSS data, which calls the getAlbumArtURL function, which calls the getAlbumArt function, refreshing the song/artist and album art
+            handler.postDelayed(this, 30000);   //will run again in 30 seconds
+        }
+    };
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -206,6 +230,18 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
     @Override
@@ -270,14 +306,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-/*    @Override
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        super();
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) || keyCode == KeyEvent.KEYCODE_VOLUME_UP){
-            int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            volumeBar.setProgress(current_volume * 7);
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
+            if (((MyApplication) this.getApplication()).isPlaying()) {
+                ((MyApplication) this.getApplication()).stopPlaying();
+                buttonPlay.setVisibility(View.VISIBLE);
+                buttonPause.setVisibility(View.INVISIBLE);
+            }
+            else {
+                ((MyApplication) this.getApplication()).startPlaying(this);
+                buttonPlay.setVisibility(View.INVISIBLE);
+                buttonPause.setVisibility(View.VISIBLE);
+            }
         }
         return true;
     }
-*/
 }
