@@ -71,6 +71,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         ///////////////////////////////////////////////////////////
 
         initializeUI();
+        ((MyApplication) this.getApplication()).updateContext(Schedule.this);
     }
 
     private void initializeUI()
@@ -173,7 +174,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
     @Override
     public void onClick(View view) {
         if (view == buttonPlay) {
-            ((MyApplication) this.getApplication()).startPlaying(this);
+            ((MyApplication) this.getApplication()).startPlaying();
             buttonPlay.setVisibility(View.INVISIBLE);
             buttonPause.setVisibility(View.VISIBLE);
         }

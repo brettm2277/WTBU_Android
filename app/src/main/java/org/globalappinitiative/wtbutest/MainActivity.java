@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity
 
     Handler handler = new Handler();    //used with the auto refresh runnable
 
+    Bitmap art;
+    String current_artist;
+    String current_title;
+    String artist_and_title;
+
     //onCreate runs when app first starts//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,10 @@ public class MainActivity extends AppCompatActivity
         ///////////////////////////////////////////////////////////
 
         initializeUI();                 //initializes the features of the buttons and volume slider
+
+        ((MyApplication) this.getApplication()).updateContext(MainActivity.this);
+
+        ((MyApplication) this.getApplication()).createNotification(current_artist, current_title, art); //create notification
 
         getRSSData();
 
@@ -145,12 +154,12 @@ public class MainActivity extends AppCompatActivity
                             s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
                         }
 
-                        String artist_and_title = songLog.get(songLog.size() - 1).getArtist().replace("&amp;", "&") + " - " + songLog.get(songLog.size()-1).getTitle();
+                        artist_and_title = songLog.get(songLog.size() - 1).getArtist().replace("&amp;", "&") + " - " + songLog.get(songLog.size()-1).getTitle();
 
                         textView_artist_song.setText(artist_and_title);
 
-                        String current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
-                        String current_title = songLog.get(songLog.size()-1).getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");                            //get most recent song
+                        current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
+                        current_title = songLog.get(songLog.size()-1).getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");                            //get most recent song
                         getAlbumArtURL(current_artist, current_title);                                              //get the url for the album artwork for this song
                     }
                 }, new Response.ErrorListener() {
@@ -201,7 +210,9 @@ public class MainActivity extends AppCompatActivity
         ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {        //says ImageRequest is deprecated although it still works. May need a different solution
             @Override
             public void onResponse(Bitmap response) {
+                art = response;
                 album_art.setImageBitmap(response);         //set image with album art if it worked
+                ((MyApplication) MainActivity.this.getApplication()).updateNotificationInfo(current_artist, current_title, art);    //update notification with new album art, song/title
             }
         }, 0, 0, null,
             new Response.ErrorListener() {
@@ -295,7 +306,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         if (view == buttonPlay) {
-            ((MyApplication) this.getApplication()).startPlaying(this);
+            ((MyApplication) this.getApplication()).startPlaying();
             buttonPlay.setVisibility(View.INVISIBLE);
             buttonPause.setVisibility(View.VISIBLE);
         }
@@ -315,7 +326,7 @@ public class MainActivity extends AppCompatActivity
                 buttonPause.setVisibility(View.INVISIBLE);
             }
             else {
-                ((MyApplication) this.getApplication()).startPlaying(this);
+                ((MyApplication) this.getApplication()).startPlaying();
                 buttonPlay.setVisibility(View.INVISIBLE);
                 buttonPause.setVisibility(View.VISIBLE);
             }
