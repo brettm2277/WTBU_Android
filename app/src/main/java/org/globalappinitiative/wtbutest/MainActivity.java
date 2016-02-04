@@ -118,7 +118,8 @@ public class MainActivity extends AppCompatActivity
         if (((MyApplication) this.getApplication()).isPlaying()) {                  //If audio already playing, show pause button
             buttonPlay.setVisibility(View.INVISIBLE);
             buttonPause.setVisibility(View.VISIBLE);
-        } else {                                                                    //If audio not playing yet, show play button
+        }
+        else {                                                                    //If audio not playing yet, show play button
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        List<Song> songLog = new ArrayList<>();
+                        List<Song> songLog = new ArrayList<Song>();
                         Parser parser = new Parser();
                         songLog = parser.parse(response, songLog);
                         String s = "";
