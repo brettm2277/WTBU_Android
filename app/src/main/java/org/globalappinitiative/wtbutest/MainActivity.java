@@ -3,6 +3,8 @@ package org.globalappinitiative.wtbutest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
     private SeekBar volumeBar;          //volume bar
+
 
     private AudioManager audioManager;  //allows for changing the volume
 
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity
     Handler handler = new Handler();    //used with the auto refresh runnable
 
     Bitmap art;
+
+    Song nowPlaying;
+
     String current_artist;
     String current_title;
     String artist_and_title;
@@ -68,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);                         //set the interface to the xml file activity_main
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);         //initialize the toolbar at the top
         setSupportActionBar(toolbar);                                   //allows the toolbar to have the capabilities of an action bar
-
+        nowPlaying = new Song("", "");
         setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
         //////////////////navigation drawer stuff//////////////////
@@ -153,14 +160,17 @@ public class MainActivity extends AppCompatActivity
                         for (int i = songLog.size()-1; i >= 0; i--) {
                             s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
                         }
+                        if (!songLog.get(songLog.size()-1).isSameSong(nowPlaying)) { // no need to get album information if song is the same
+                            nowPlaying = songLog.get(songLog.size()-1);
+                            artist_and_title = nowPlaying.getArtist().replace("&amp;", "&") + " - " + nowPlaying.getTitle();
 
-                        artist_and_title = songLog.get(songLog.size() - 1).getArtist().replace("&amp;", "&") + " - " + songLog.get(songLog.size()-1).getTitle();
+                            textView_artist_song.setText(artist_and_title);
 
-                        textView_artist_song.setText(artist_and_title);
+                            current_artist = nowPlaying.getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
+                            current_title = nowPlaying.getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");      //get most recent song
+                            getSongArtLength(nowPlaying);                                            //get the url for the album artwork for this song
+                        }
 
-                        current_artist = songLog.get(songLog.size()-1).getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
-                        current_title = songLog.get(songLog.size()-1).getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");                            //get most recent song
-                        getAlbumArtURL(current_artist, current_title);                                              //get the url for the album artwork for this song
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -172,9 +182,9 @@ public class MainActivity extends AppCompatActivity
         queue.add(stringRequest);       //add the request to the queue
     }
 
-    private void getAlbumArtURL(String current_artist, String current_title)        //uses the free iTunes api to get album artwork url
+    private void getSongArtLength(final Song song)        //uses the free iTunes api to get album artwork url
     {
-        String artist_and_title = current_artist + " " + current_title;
+        String artist_and_title = song.getArtist() + " " + song.getTitle();
         String url = "https://itunes.apple.com/search?term=" + artist_and_title.replaceAll(" ", "+");   //add artist and title to url
         Log.d("URL", url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,        //use volley to make a string request
@@ -190,6 +200,8 @@ public class MainActivity extends AppCompatActivity
                             artwork_url = artwork_url.substring(0, index) + "1200x1200bb.jpg";        //artwork_url contains image of album artwork
                             Log.d("Artwork URL", artwork_url);
                             getAlbumArt(artwork_url);                                 //need to make another request using volley to actually get the image
+                            int song_length = res.getInt("trackTimeMillis");          // gets length of song from API
+                            song.setTrackLength(song_length);                         // set the length of the song
                         } catch (JSONException e) {
                             Log.e("JSON error", e.toString());
                             e.printStackTrace();
@@ -227,6 +239,10 @@ public class MainActivity extends AppCompatActivity
     public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
         @Override
         public void run() {
+            if (nowPlaying.getSongEnd() < Calendar.getInstance().getTimeInMillis() ) {
+                textView_artist_song.setText(getString(R.string.wtbu_radio));
+                album_art.setImageResource(R.drawable.wtbu_app);
+            }
             getRSSData();   //gets RSS data, which calls the getAlbumArtURL function, which calls the getAlbumArt function, refreshing the song/artist and album art
             handler.postDelayed(this, 30000);   //will run again in 30 seconds
         }

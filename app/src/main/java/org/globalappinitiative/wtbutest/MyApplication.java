@@ -120,7 +120,7 @@ public class MyApplication extends Application {
 
 
         mBuilder = new NotificationCompat.Builder(this);    //build notification
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
                 .setLargeIcon(art)
                 .setContentTitle("WTBU")
                 .setContentText(artist)
