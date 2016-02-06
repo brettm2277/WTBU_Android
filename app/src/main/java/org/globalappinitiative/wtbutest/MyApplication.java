@@ -106,6 +106,14 @@ public class MyApplication extends Application {
         }
     }
 
+    // Add an accessor method for setting the volume of the media player
+    public void setVolume(int value) {
+        // setVolume takes a fraction between 0 and 1, and input is out of 100, so need to convert
+        float convertedSliderVal = ((float) value) / 100;
+        // setVolume takes a left value and a right value, I believe that this pans the sound between speakers sort of like stereo sound. Can anyone confirm? --Evan
+        player.setVolume(convertedSliderVal, convertedSliderVal);
+    }
+
     public boolean isPlaying() {
         return player.isPlaying();
     }
