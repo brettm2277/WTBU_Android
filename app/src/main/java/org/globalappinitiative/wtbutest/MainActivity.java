@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
-    private void initializeUI() {
+    protected void initializeUI() {
         album_art = (ImageView) findViewById(R.id.album_art);
 
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity
             buttonPause.setVisibility(View.INVISIBLE);
         }
 
+
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
         int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
@@ -131,7 +133,8 @@ public class MainActivity extends AppCompatActivity
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i / 6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
+                // Pass the slider value (integer between 0 and 100) to setVolume() method
+                ((MyApplication) getApplication()).setVolume(i);
             }
 
             @Override

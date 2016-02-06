@@ -74,7 +74,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
     }
 
-    private void initializeUI()
+    protected void initializeUI()
     {
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
