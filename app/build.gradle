@@ -27,4 +27,5 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
+    compile files('/Users/evanbowman/Desktop/WTBU_Android/libs/sinch-android-rtc-3.9.1.jar')
 }

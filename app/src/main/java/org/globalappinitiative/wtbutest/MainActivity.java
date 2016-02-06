@@ -31,6 +31,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sinch.android.rtc.ClientRegistration;
+import com.sinch.android.rtc.PushPair;
+import com.sinch.android.rtc.Sinch;
+import com.sinch.android.rtc.SinchClient;
+import com.sinch.android.rtc.SinchClientListener;
+import com.sinch.android.rtc.SinchError;
+import com.sinch.android.rtc.messaging.Message;
+import com.sinch.android.rtc.messaging.MessageClient;
+import com.sinch.android.rtc.messaging.MessageClientListener;
+import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
+import com.sinch.android.rtc.messaging.MessageFailureInfo;
+import com.sinch.android.rtc.messaging.WritableMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -113,7 +125,8 @@ public class MainActivity extends AppCompatActivity
         if (((MyApplication) this.getApplication()).isPlaying()) {                  //If audio already playing, show pause button
             buttonPlay.setVisibility(View.INVISIBLE);
             buttonPause.setVisibility(View.VISIBLE);
-        } else {                                                                    //If audio not playing yet, show play button
+        }
+        else {                                                                    //If audio not playing yet, show play button
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
@@ -153,7 +166,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
-                        List<Song> songLog = new ArrayList<>();
+                        List<Song> songLog = new ArrayList<Song>();
                         Parser parser = new Parser();
                         songLog = parser.parse(response, songLog);
                         String s = "";
@@ -311,7 +324,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_chat) {
-
+            Intent intent = new Intent(this, Chat.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

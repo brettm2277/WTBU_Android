@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.globalappinitiative.wtbutest.Chat">
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:textColorHint="@android:color/white"
+        android:ems="10"
+        android:id="@+id/editTextName"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="127dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Recipient"
+        android:textColorHint="@android:color/white"
+        android:ems="10"
+        android:id="@+id/editTextRecipient"
+        android:layout_below="@+id/editTextName"
+        android:layout_alignLeft="@+id/editTextName"
+        android:layout_alignStart="@+id/editTextName"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Message"
+        android:textColorHint="@android:color/white"
+        android:ems="10"
+        android:id="@+id/editTextMessage"
+        android:layout_below="@+id/editTextRecipient"
+        android:layout_alignLeft="@+id/editTextRecipient"
+        android:layout_alignStart="@+id/editTextRecipient"
+        android:visibility="invisible"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign In"
+        android:id="@+id/buttonSignIn"
+        android:layout_below="@id/editTextMessage"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Message"
+        android:id="@+id/buttonSendMessage"
+        android:layout_marginTop="69dp"
+        android:layout_below="@+id/buttonSignIn"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Message"
+        android:id="@+id/textView2"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/buttonSendMessage"
+        android:layout_alignRight="@+id/editTextMessage"
+        android:layout_alignEnd="@+id/editTextMessage" />
+
+</RelativeLayout>
