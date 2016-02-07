@@ -37,7 +37,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         //grab schedule from parse
         //all we have here is pulling the genre from the first show.
         //just replace the first parameter of getInBackground with the ID of whichever show is desired from parse
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("WTBU");
+        /*ParseQuery<ParseObject> query = ParseQuery.getQuery("WTBU");
         query.getInBackground("wxAqbgBlmp", new GetCallback<ParseObject>() {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
@@ -48,7 +48,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
                     Log.d("Parse", "error");
                 }
             }
-        });
+        });*/
 
 
 
@@ -100,7 +100,7 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, i / 6, AudioManager.FLAG_SHOW_UI);    //the volume is out of 15, so doing i/6 allows for an even distribution of volume across the slider
+                ((MyApplication) getApplication()).setVolume(i);
             }
 
             @Override
@@ -163,7 +163,8 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_chat) {
-
+            Intent intent = new Intent(this, Chat.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
