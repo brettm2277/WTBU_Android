@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/editTextRecipient"
-        android:hint="Recipient"
+        android:hint="DJ Name"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:background="#32323c"
@@ -43,21 +43,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Name"
-        android:textColorHint="@android:color/white"
+        android:hint="Your Name"
+        android:textColor="@android:color/white"
+        android:textColorHint="#b9b8d2"
         android:ems="10"
+        android:padding="8dp"
+        android:background="@drawable/rounded_rectangle"
         android:id="@+id/editTextName"
+        android:layout_marginBottom="25dp"
         android:layout_above="@+id/buttonSignIn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="47dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
         android:text="Sign In"
         android:id="@+id/buttonSignIn"
+        android:textSize="16sp"
+        android:background="@drawable/sign_in_button"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/editTextName"
+        android:layout_alignStart="@+id/editTextName"
+        android:layout_alignRight="@+id/editTextName"
+        android:layout_alignEnd="@+id/editTextName" />
 
     <LinearLayout
         android:orientation="horizontal"
