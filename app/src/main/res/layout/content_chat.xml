@@ -9,12 +9,24 @@
     android:background="@color/contentBkgColor">
 
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/editTextRecipient"
+        android:hint="Recipient"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:background="#32323c"
+        android:textColor="#b9b8d2"
+        android:textColorHint="#b9b8d2"/>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/pastMessages"
         android:layout_above="@+id/linearLayout"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/editTextRecipient">
 
         <LinearLayout
             android:id="@+id/childLayout"
@@ -22,7 +34,9 @@
             android:layout_width="match_parent"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_height="match_parent"></LinearLayout>
+            android:layout_height="match_parent">
+
+        </LinearLayout>
     </ScrollView>
 
     <EditText
@@ -33,16 +47,17 @@
         android:textColorHint="@android:color/white"
         android:ems="10"
         android:id="@+id/editTextName"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/buttonSignIn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="47dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:id="@+id/buttonSignIn"
-        android:layout_below="@+id/editTextName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -59,7 +74,8 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:hint="Message"
-            android:textColorHint="@android:color/white"
+            android:textColorHint="#b9b8d2"
+            android:textColor="@android:color/white"
             android:ems="10"
             android:textSize="18sp"
             android:id="@+id/editTextMessage"

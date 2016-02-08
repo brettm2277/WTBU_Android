@@ -39,7 +39,7 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
 
 
     private EditText editTextName;
-    //private Spinner spinnerRecipient;
+    private EditText editTextRecipient;
     private EditText editTextMessage;
 
     private Button buttonSignIn;
@@ -83,7 +83,8 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void initializeUI() {
         editTextName = (EditText) findViewById(R.id.editTextName);
-        //spinnerRecipient = (Spinner) findViewById(R.id.spinner);
+        editTextRecipient = (EditText) findViewById(R.id.editTextRecipient);
+        editTextRecipient.setVisibility(View.INVISIBLE);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
 
         pastMessages = (ScrollView) findViewById(R.id.pastMessages);
@@ -145,7 +146,35 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
             public void onIncomingMessage(MessageClient messageClient, Message message) {
                 Log.d("Sinch", "Message received");
                 Log.d("Message", message.getTextBody());
-                // Store the text somehow, and add a message to the vertical scroll view...
+
+                // Now store the message within the scroll view's linear layout child
+                LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);
+                TextView tv = new TextView(getApplicationContext());
+                // Put the user's message into the text view
+                tv.setText(message.getTextBody());
+                // Set the font color of the text view
+                tv.setTextColor(Color.parseColor("#FFFFFF"));
+                // Add a background image (the nine patch text bubble, the other one is called red bubble but it's actually gray)
+                tv.setBackgroundResource(R.drawable.actually_red_bubble);
+                // Set the size for the textview
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                TextView blank = new TextView(getApplicationContext());
+                blank.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
+                TextView blank2 = new TextView(getApplicationContext());
+                blank2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
+                // Add the text view to the layout
+                mLayout.addView(blank);
+                mLayout.addView(tv);
+                mLayout.addView(blank2);
+
+                // Now scroll to the bottom of the scrollview so that the new message shows up
+                pastMessages.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        pastMessages.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+
+                });
             }
 
             @Override
@@ -201,6 +230,7 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public void onClick(View view) {
         if (view == buttonSignIn) {
+            editTextRecipient.setVisibility(View.VISIBLE);
             name = editTextName.getText().toString();
             editTextName.setVisibility(View.INVISIBLE);
             pastMessages.setVisibility(View.VISIBLE);
@@ -213,14 +243,14 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         }
         if (view == buttonSendMessage) {
             editTextMessage.setVisibility(View.VISIBLE);
-            //recipient = spinnerRecipient.getSelectedItem().toString();
+            recipient = editTextRecipient.getText().toString();
             message = editTextMessage.getText().toString();
 
             // Only attempt to send the message if it contains something and the user has selected a recipient
             if (message != "" && recipient != "") {
-                WritableMessage writableMessage = new WritableMessage("DJ", message);
+                WritableMessage writableMessage = new WritableMessage(recipient, message);
                 Log.d("Sinch", "sending message");
-                //messageClient.send(writableMessage);
+                messageClient.send(writableMessage);
 
                 // Get the id of the linear layout to place text into
                 LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);
