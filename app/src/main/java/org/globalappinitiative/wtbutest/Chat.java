@@ -234,9 +234,13 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                 // Set the size for the textview
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 TextView blank = new TextView(this);
+                blank.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
+                TextView blank2 = new TextView(this);
+                blank2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
                 // Add the text view to the layout
                 mLayout.addView(blank);
                 mLayout.addView(tv);
+                mLayout.addView(blank2);
                 // Clear out the text from the text entry box
                 editTextMessage.setText("");
 
