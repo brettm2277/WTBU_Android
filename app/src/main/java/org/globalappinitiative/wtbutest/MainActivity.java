@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
             if (((MyApplication) this.getApplication()).isPlaying()) {
@@ -350,5 +350,5 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return true;
-    }
+    }*/
 }

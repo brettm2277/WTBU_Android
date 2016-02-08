@@ -5,8 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.globalappinitiative.wtbutest.Chat">
+    tools:context="org.globalappinitiative.wtbutest.Chat"
+    android:background="@color/contentBkgColor">
 
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/pastMessages"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true" >
+
+        <LinearLayout
+            android:id="@+id/childLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent"></LinearLayout>
+    </ScrollView>
 
     <EditText
         android:layout_width="wrap_content"
@@ -16,64 +33,59 @@
         android:textColorHint="@android:color/white"
         android:ems="10"
         android:id="@+id/editTextName"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="127dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Recipient"
-        android:textColorHint="@android:color/white"
-        android:ems="10"
-        android:id="@+id/editTextRecipient"
-        android:layout_below="@+id/editTextName"
-        android:layout_alignLeft="@+id/editTextName"
-        android:layout_alignStart="@+id/editTextName"
-        android:visibility="invisible"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Message"
-        android:textColorHint="@android:color/white"
-        android:ems="10"
-        android:id="@+id/editTextMessage"
-        android:layout_below="@+id/editTextRecipient"
-        android:layout_alignLeft="@+id/editTextRecipient"
-        android:layout_alignStart="@+id/editTextRecipient"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sign In"
         android:id="@+id/buttonSignIn"
-        android:layout_below="@id/editTextMessage"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send Message"
-        android:id="@+id/buttonSendMessage"
-        android:layout_marginTop="69dp"
-        android:layout_below="@+id/buttonSignIn"
+        android:layout_below="@+id/editTextName"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"/>
+        android:layout_marginTop="44dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Message"
-        android:id="@+id/textView2"
-        android:textColor="@android:color/white"
-        android:layout_below="@+id/buttonSendMessage"
-        android:layout_alignRight="@+id/editTextMessage"
-        android:layout_alignEnd="@+id/editTextMessage" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:id="@+id/linearLayout">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Message"
+            android:textColorHint="@android:color/white"
+            android:ems="10"
+            android:id="@+id/editTextMessage"
+            android:visibility="invisible"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/buttonSendMessage"
+            android:layout_toStartOf="@+id/buttonSendMessage"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@null"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:layout_marginLeft="12dp" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="Send"
+            android:textSize="16sp"
+            android:id="@+id/buttonSendMessage"
+            android:visibility="invisible"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="9dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_send"/>
+    </LinearLayout>
 
 </RelativeLayout>

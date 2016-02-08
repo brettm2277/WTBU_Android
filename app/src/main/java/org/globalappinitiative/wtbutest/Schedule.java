@@ -33,25 +33,6 @@ public class Schedule extends MainActivity implements NavigationView.OnNavigatio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        //grab schedule from parse
-        //all we have here is pulling the genre from the first show.
-        //just replace the first parameter of getInBackground with the ID of whichever show is desired from parse
-        /*ParseQuery<ParseObject> query = ParseQuery.getQuery("WTBU");
-        query.getInBackground("wxAqbgBlmp", new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    String genre = object.get("genre").toString();
-                    Log.d("Genre", genre);
-                } else {
-                    // something went wrong
-                    Log.d("Parse", "error");
-                }
-            }
-        });*/
-
-
-
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
