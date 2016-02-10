@@ -133,8 +133,8 @@ class Parser {
                         i++;
                     }
                     Song tempSong = new Song(songTitle, artistName);
-                    // Now only add a new song if both the artist and title are different
-                    if (!tempSong.getArtist().equals(songLog.get(songLog.size() - 1).getArtist()) && !tempSong.getTitle().equals(songLog.get(songLog.size() - 1).getTitle())) {
+                    // Now only add a new song if the artist or the title are different
+                    if (!tempSong.getArtist().equals(songLog.get(songLog.size() - 1).getArtist()) || !tempSong.getTitle().equals(songLog.get(songLog.size() - 1).getTitle())) {
                         songLog.add(tempSong);
                     }
                     // If we've got the first song, no reason to loop through the rest of the string, so exit
