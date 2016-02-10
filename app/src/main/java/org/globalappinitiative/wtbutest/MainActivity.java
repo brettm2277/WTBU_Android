@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
-    protected void initializeUI() {
+    // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
+    private void initializeUI() {
         album_art = (ImageView) findViewById(R.id.album_art);
 
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
@@ -350,7 +351,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK) {
             if (((MyApplication) this.getApplication()).isPlaying()) {
@@ -365,5 +366,5 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return true;
-    }
+    }*/
 }
