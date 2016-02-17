@@ -1,5 +1,6 @@
 package org.globalappinitiative.wtbutest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,18 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.sinch.android.rtc.ClientRegistration;
-import com.sinch.android.rtc.PushPair;
-import com.sinch.android.rtc.Sinch;
-import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.SinchClientListener;
-import com.sinch.android.rtc.SinchError;
-import com.sinch.android.rtc.messaging.Message;
-import com.sinch.android.rtc.messaging.MessageClient;
-import com.sinch.android.rtc.messaging.MessageClientListener;
-import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
-import com.sinch.android.rtc.messaging.MessageFailureInfo;
-import com.sinch.android.rtc.messaging.WritableMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,7 +48,6 @@ public class MainActivity extends AppCompatActivity
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
     private SeekBar volumeBar;          //volume bar
-
 
     private AudioManager audioManager;  //allows for changing the volume
 
@@ -272,7 +260,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-
         }
     }
 

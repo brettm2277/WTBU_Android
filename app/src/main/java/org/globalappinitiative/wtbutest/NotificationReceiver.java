@@ -12,6 +12,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Notification", "clicked");
+        Log.d("Context", context.toString());
 
         if (((MyApplication) context.getApplicationContext()).isPlaying()) {
             ((MyApplication) context.getApplicationContext()).stopPlaying();

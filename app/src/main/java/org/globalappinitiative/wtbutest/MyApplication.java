@@ -34,6 +34,13 @@ public class MyApplication extends Application {
 
     private NotificationManager manager;
 
+    ProgressDialog progressDialog;
+
+    private boolean first_time = true;
+    private boolean ready_to_play = false;
+    private boolean clicked_play = false;
+
+
     public void onCreate() {
         super.onCreate();
         // Enable Local Datastore.
@@ -42,6 +49,7 @@ public class MyApplication extends Application {
         Parse.initialize(this, "1YQrSQX8ISBBkVdXA2tgSmv0j2cBOx878Es5d5lD", "zplY28RZTzs5SqiUog33vcDlCIqP7FaJcVS28daA");
 
         initializeMediaPlayer();
+        preparePlayer();
     }
 
     public void updateContext(Context context) {    //call this when any new activity is started
@@ -59,40 +67,87 @@ public class MyApplication extends Application {
 
     }
 
-    public void startPlaying() {
-        //prepare media player
+    public void preparePlayer() {       //gets player ready in the background
         if (!player.isPlaying()) {
             try {
-                player.prepareAsync();
-            } catch (IllegalStateException e) {
+                player.prepareAsync();  //prepare
+            } catch (IllegalStateException e) { //catch exceptions
                 e.printStackTrace();
             }
+        }
 
-            //show progress dialog while it's loading
-            final ProgressDialog progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage("Loading Stream...");
-            progressDialog.show();
-
-            //change notification to show the loading icon
-            mBuilder.mActions.clear();  //remove the play icon
-            mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
-            manager.notify(2, mBuilder.build());    //show notification
-
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    //once it's loaded, close progress dialog and start player
-                    progressDialog.hide();
-                    player.start();
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {       //runs when player is ready
+                if (!clicked_play) {        //if the play button wasn't clicked, but we're done pre-loading in background
+                    ready_to_play = true;   //ready to play
+                }
+                else {  //if the play button was clicked and the user is waiting
+                    progressDialog.hide();  //hide progress dialog
+                    player.start();         //start player
                     //change notification action to stop button
                     mBuilder.mActions.clear();  //remove loading icon
                     mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
                     manager.notify(2, mBuilder.build());    //show notification
                 }
-            });
-        }
+            }
+        });
     }
 
+    public void startPlaying() {
+        if (first_time) {   //if it's the first time the app is running
+            if (ready_to_play) {    //if the player is done loading and is ready
+                player.start();     //start the player
+                clicked_play = true;    //set clicked to true, probably not useful since won't be used again
+            } else {                //if it's not done loading yet
+                clicked_play = true;    //the user clicked play
+                //show progress dialog while it's loading
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setMessage("Loading Stream...");
+                progressDialog.show();
+
+                //change notification to show the loading icon
+                mBuilder.mActions.clear();  //remove the play icon
+                mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
+                manager.notify(2, mBuilder.build());    //show notification
+            }
+            first_time = false; //no longer the first time
+        }
+        else {  //if it's not the first time, load the player normally and show progress dialog
+
+            //prepare media player
+            if (!player.isPlaying()) {
+                try {
+                    player.prepareAsync();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+
+                //show progress dialog while it's loading
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setMessage("Loading Stream...");
+                progressDialog.show();
+
+                //change notification to show the loading icon
+                mBuilder.mActions.clear();  //remove the play icon
+                mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
+                manager.notify(2, mBuilder.build());    //show notification
+
+                player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        //once it's loaded, close progress dialog and start player
+                        progressDialog.hide();
+                        player.start();
+                        //change notification action to stop button
+                        mBuilder.mActions.clear();  //remove loading icon
+                        mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
+                        manager.notify(2, mBuilder.build());    //show notification
+                    }
+                });
+            }
+        }
+    }
     public void stopPlaying() {
         if (player.isPlaying())
         {
@@ -150,4 +205,9 @@ public class MyApplication extends Application {
                 .build();
         manager.notify(2, mBuilder.build());
     }
+
+    public void removeNotification() {
+        manager.cancelAll();
+    }
+
 }
