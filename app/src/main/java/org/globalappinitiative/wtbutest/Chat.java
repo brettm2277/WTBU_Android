@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -146,6 +147,7 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
             public void onIncomingMessage(MessageClient messageClient, Message message) {
                 Log.d("Sinch", "Message received");
                 Log.d("Message", message.getTextBody());
+                String sender = message.getSenderId().toString();
 
                 // Now store the message within the scroll view's linear layout child
                 LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);
@@ -158,12 +160,15 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                 tv.setBackgroundResource(R.drawable.actually_red_bubble);
                 // Set the size for the textview
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                TextView blank = new TextView(getApplicationContext());
-                blank.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
+                TextView from = new TextView(getApplicationContext());
+                from.setText(sender);
+                from.setTextColor(Color.parseColor("#83849a"));
+                from.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                from.setGravity(Gravity.RIGHT);
                 TextView blank2 = new TextView(getApplicationContext());
                 blank2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
                 // Add the text view to the layout
-                mLayout.addView(blank);
+                mLayout.addView(from);
                 mLayout.addView(tv);
                 mLayout.addView(blank2);
 
@@ -252,6 +257,8 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                 Log.d("Sinch", "sending message");
                 messageClient.send(writableMessage);
 
+                String toStr = ", sent to: ";
+
                 // Get the id of the linear layout to place text into
                 LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);
                 TextView tv = new TextView(this);
@@ -263,12 +270,14 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                 tv.setBackgroundResource(R.drawable.red_bubble);
                 // Set the size for the textview
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                TextView blank = new TextView(this);
-                blank.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
+                TextView from = new TextView(this);
+                from.setText(name + toStr + recipient);
+                from.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                from.setTextColor(Color.parseColor("#50505d"));
                 TextView blank2 = new TextView(this);
                 blank2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
                 // Add the text view to the layout
-                mLayout.addView(blank);
+                mLayout.addView(from);
                 mLayout.addView(tv);
                 mLayout.addView(blank2);
                 // Clear out the text from the text entry box
