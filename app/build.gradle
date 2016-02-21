@@ -28,4 +28,5 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile files('../libs/sinch-android-rtc-3.9.1.jar')
+    compile files('../libs/jsoup-1.8.3.jar')
 }

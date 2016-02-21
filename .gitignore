@@ -35,6 +35,13 @@ proguard/
 # Windows clutter
 Thumbs.db
 
+# Android Studio
+*.iml
+.idea
+.gradle
+build/
+
+
 # Intellij IDEA (see https://intellij-support.jetbrains.com/entries/23393067)
 .idea/workspace.xml
 .idea/tasks.xml
