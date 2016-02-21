@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView buttonPause;      //pause button
     private SeekBar volumeBar;          //volume bar
 
+    final int UPDATE_DELAY = 15000;     // Update data every 15 seconds
 
     private AudioManager audioManager;  //allows for changing the volume
 
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     Bitmap art;
 
     Song nowPlaying;
+    private int timeLeft;
+
 
     String current_artist;
     String current_title;
@@ -87,7 +90,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);                         //set the interface to the xml file activity_main
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);         //initialize the toolbar at the top
         setSupportActionBar(toolbar);                                   //allows the toolbar to have the capabilities of an action bar
-        nowPlaying = new Song("", "");
+        nowPlaying = new Song("", "");                                  // set nowPlaying
+        timeLeft = 0;                                                   // set song time left
         setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
         //////////////////navigation drawer stuff//////////////////
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
         getRSSData();
 
-        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
+        handler.postDelayed(runnable, UPDATE_DELAY);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
     // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
@@ -218,6 +222,7 @@ public class MainActivity extends AppCompatActivity
                             Log.d("Artwork URL", artwork_url);
                             getAlbumArt(artwork_url);                                 //need to make another request using volley to actually get the image
                             int song_length = res.getInt("trackTimeMillis");          // gets length of song from API
+                            timeLeft = song_length;
                             song.setTrackLength(song_length);                         // set the length of the song
                         } catch (JSONException e) {
                             Log.e("JSON error", e.toString());
@@ -261,7 +266,13 @@ public class MainActivity extends AppCompatActivity
                 album_art.setImageResource(R.drawable.wtbu_app);
             }
             getRSSData();   //gets RSS data, which calls the getAlbumArtURL function, which calls the getAlbumArt function, refreshing the song/artist and album art
-            handler.postDelayed(this, 30000);   //will run again in 30 seconds
+            if (timeLeft < UPDATE_DELAY) {
+                handler.postDelayed(this, timeLeft+100);   // post update a bit later
+                timeLeft = UPDATE_DELAY;                   // set time left as update delay
+            } else {
+                handler.postDelayed(this, UPDATE_DELAY);   //will run again in 30 seconds
+                timeLeft -= UPDATE_DELAY;
+            }
         }
     };
 
@@ -285,7 +296,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
+        handler.postDelayed(runnable, UPDATE_DELAY);   //Runnable will run after delay of 15 seconds
     }
 
     @Override
