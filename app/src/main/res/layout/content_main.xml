@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/app_bar_main"
+    android:background="@color/contentBkgColor">
+
+    <TextView
+        android:id="@+id/textView_artist_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:paddingTop="18dp"
+        android:singleLine="true"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="#b9b8d2" />
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/control_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="15dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/buttonPlay"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/play_button" />
+
+            <ImageView
+                android:id="@+id/buttonPause"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/pause_button"
+                android:visibility="invisible"/>
+
+            <SeekBar
+                android:id="@+id/volumeBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/buttonPlay"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp" />
+
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/album_art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/control_bar"
+        android:layout_below="@id/textView_artist_song"/>
+
+</RelativeLayout>

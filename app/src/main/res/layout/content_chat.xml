@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="org.globalappinitiative.wtbutest.Chat"
+    android:background="@color/contentBkgColor">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/editTextRecipient"
+        android:hint="DJ Name"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:background="#32323c"
+        android:textColor="#b9b8d2"
+        android:textColorHint="#b9b8d2"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/pastMessages"
+        android:layout_above="@+id/linearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/editTextRecipient">
+
+        <LinearLayout
+            android:id="@+id/childLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Your Name"
+        android:textColor="@android:color/white"
+        android:textColorHint="#b9b8d2"
+        android:ems="10"
+        android:padding="8dp"
+        android:background="@drawable/rounded_rectangle"
+        android:id="@+id/editTextName"
+        android:layout_marginBottom="25dp"
+        android:layout_above="@+id/buttonSignIn"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:text="Sign In"
+        android:id="@+id/buttonSignIn"
+        android:textSize="16sp"
+        android:background="@drawable/sign_in_button"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/editTextName"
+        android:layout_alignStart="@+id/editTextName"
+        android:layout_alignRight="@+id/editTextName"
+        android:layout_alignEnd="@+id/editTextName" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"
+        android:id="@+id/linearLayout">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Message"
+            android:textColorHint="#b9b8d2"
+            android:textColor="@android:color/white"
+            android:ems="10"
+            android:textSize="18sp"
+            android:id="@+id/editTextMessage"
+            android:visibility="invisible"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/buttonSendMessage"
+            android:layout_toStartOf="@+id/buttonSendMessage"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@null"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:layout_marginLeft="12dp" />
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:text="Send"
+            android:textSize="18sp"
+            android:id="@+id/buttonSendMessage"
+            android:visibility="invisible"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="9dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/button_send"/>
+    </LinearLayout>
+
+</RelativeLayout>
