@@ -34,6 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,19 +55,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private Spinner spinner;
 
     private String[] programs = {"Program1", "Program2", "Program3", "Program4"};
+    ArrayList<ArrayList<ScheduleItem>> allPrograms = new ArrayList<ArrayList<ScheduleItem>>();
 
-    private TextView textView_Program1;
-    private TextView textView_Program2;
-    private TextView textView_Program3;
-    private TextView textView_Program4;
-    private TextView textView_Program5;
-    private TextView textView_Program6;
-    private TextView textView_Program7;
-    private TextView textView_Program8;
-    private TextView textView_Program9;
-    private TextView textView_Program10;
-
-
+    private TextView[] textView_Programs = new TextView[10];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +79,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
-
+        for (int i = 0; i < 7; i++) {
+            allPrograms.add(new ArrayList<ScheduleItem>()); // Add seven ArrayLists
+        }
         initializeUI();
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
         new JsoupAsyncTask().execute();
@@ -96,16 +89,16 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     protected void initializeUI()
     {
-        textView_Program1 = (TextView) findViewById(R.id.textView_program1);
-        textView_Program2 = (TextView) findViewById(R.id.textView_program2);
-        textView_Program3 = (TextView) findViewById(R.id.textView_program3);
-        textView_Program4 = (TextView) findViewById(R.id.textView_program4);
-        textView_Program5 = (TextView) findViewById(R.id.textView_program5);
-        textView_Program6 = (TextView) findViewById(R.id.textView_program6);
-        textView_Program7 = (TextView) findViewById(R.id.textView_program7);
-        textView_Program8 = (TextView) findViewById(R.id.textView_program8);
-        textView_Program9 = (TextView) findViewById(R.id.textView_program9);
-        textView_Program10 = (TextView) findViewById(R.id.textView_program10);
+        textView_Programs[0] = (TextView) findViewById(R.id.textView_program1);
+        textView_Programs[1] = (TextView) findViewById(R.id.textView_program2);
+        textView_Programs[2] = (TextView) findViewById(R.id.textView_program3);
+        textView_Programs[3] = (TextView) findViewById(R.id.textView_program4);
+        textView_Programs[4] = (TextView) findViewById(R.id.textView_program5);
+        textView_Programs[5] = (TextView) findViewById(R.id.textView_program6);
+        textView_Programs[6] = (TextView) findViewById(R.id.textView_program7);
+        textView_Programs[7] = (TextView) findViewById(R.id.textView_program8);
+        textView_Programs[8] = (TextView) findViewById(R.id.textView_program9);
+        textView_Programs[9] = (TextView) findViewById(R.id.textView_program10);
 
 
 
@@ -264,13 +257,13 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         Element link = cols.get(j).select("a").first();
                         if (link != null) {
                             String relHref = link.attr("href");
-                            Pattern weekdayPattern = Pattern.compile("(mon|tues|wednes|thurs|fri|satur|sun)day");
+                            Pattern weekdayPattern = Pattern.compile("(sun|mon|tues|wednes|thurs|fri|satur)day");
                             Matcher matcher = weekdayPattern.matcher(relHref);
                             if (matcher.find()) {
                                 String showDay = matcher.group(0); // Capitalize the first letter
-                                showDay = showDay.substring(0,1).toUpperCase() + showDay.substring(1);
                                 String showName = cols.get(j).text();
-                                Log.d("show name", showName + " on " + showDay + " at" + showTime);
+                                ScheduleItem program = new ScheduleItem(showDay, relHref, showTime, showName);
+                                allPrograms.get(program.getDayOfWeek()).add(program);
                             }
                         }
                     }
@@ -285,31 +278,18 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected void onPostExecute(Void result) {
             // Load string data into views here.
+            int currentDay = Calendar.DAY_OF_WEEK-Calendar.SUNDAY;
+            for (int i = 0; i < allPrograms.get(currentDay).size(); i++) {
+                textView_Programs[i].setText(allPrograms.get(currentDay).get(i).getTitle());
+            }
         }
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Position", Integer.toString(position));
-        switch (position) {
-            case 0:
-            /*  textView_Program1.setText("");
-                textView_Program2.setText("");
-                textView_Program3.setText("");
-                textView_Program4.setText("");
-                textView_Program5.setText("");
-                textView_Program6.setText("");
-                textView_Program7.setText("");
-                textView_Program8.setText("");
-                textView_Program9.setText("");
-                textView_Program10.setText("");
-                */
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            default:
+        for (int i = 0; i < allPrograms.get(position).size(); i++) {
+            textView_Programs[i].setText(allPrograms.get(position).get(i).getTitle());
         }
     }
 
