@@ -54,7 +54,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     private Spinner spinner;
 
-    private String[] programs = {"Program1", "Program2", "Program3", "Program4"};
     ArrayList<ArrayList<ScheduleItem>> allPrograms = new ArrayList<ArrayList<ScheduleItem>>();
 
     private TextView[] textView_Programs = new TextView[10];

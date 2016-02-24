@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         List<Song> songLog = new ArrayList<Song>();
-                        Parser parser = new Parser();
+                        XMLParser parser = new XMLParser();
                         songLog = parser.parse(response, songLog);
                         String s = "";
                         for (int i = songLog.size()-1; i >= 0; i--) {
