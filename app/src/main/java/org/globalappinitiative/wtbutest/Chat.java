@@ -213,11 +213,6 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_schedule) {
             Intent intent = new Intent(this, Schedule.class);
             startActivity(intent);
-
-        } else if (id == R.id.nav_history) {
-
-        } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_chat) {
 
         }

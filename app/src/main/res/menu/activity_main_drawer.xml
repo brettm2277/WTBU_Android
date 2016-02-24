@@ -4,27 +4,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_playing"
-            android:icon="@android:drawable/ic_menu_camera"
+            android:icon="@drawable/ic_equalizer_white_24dp"
             android:title="Now Playing" />
         <item
             android:id="@+id/nav_schedule"
-            android:icon="@android:drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_today_white_24dp"
             android:title="Schedule" />
-        <item
-            android:id="@+id/nav_history"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="History" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item
                 android:id="@+id/nav_chat"
-                android:icon="@android:drawable/ic_menu_send"
+                android:icon="@drawable/ic_chat_white_24dp"
                 android:title="Chat" />
         </menu>
     </item>

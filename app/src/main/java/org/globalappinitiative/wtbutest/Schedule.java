@@ -174,9 +174,54 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         spinner.setOnItemSelectedListener(this);
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DAY_OF_WEEK);  //sunday = 1, saturday = 7
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        setCurrentProgramRed(hour);
+        Log.d("Hour", Integer.toString(hour));
         Log.d("Day", Integer.toString(day));
         spinner.setSelection(day - 1);
 
+    }
+
+    public void setCurrentProgramRed(int hour) {
+        if (hour < 6) {
+            hour = 24;
+        }
+        else if (hour % 2 != 0) {
+            hour = hour - 1;
+        }
+        Log.d("New hour", Integer.toString(hour));
+        switch (hour) {
+            case 6:
+                textView_Programs[0].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 8:
+                textView_Programs[1].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 10:
+                textView_Programs[2].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 12:
+                textView_Programs[3].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 14:
+                textView_Programs[4].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 16:
+                textView_Programs[5].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 18:
+                textView_Programs[6].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 20:
+                textView_Programs[7].setBackgroundResource(R.drawable.red_square);
+                return;
+            case 22:
+                textView_Programs[8].setBackgroundResource(R.drawable.red_square);
+                return;
+            default:
+                textView_Programs[9].setBackgroundResource(R.drawable.red_square);
+                return;
+        }
     }
 
     @Override
@@ -206,10 +251,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(intent);
         } else if (id == R.id.nav_schedule) {
             //do nothing
-
-        } else if (id == R.id.nav_history) {
-
-        } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
@@ -277,9 +318,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected void onPostExecute(Void result) {
             // Load string data into views here.
-            int currentDay = Calendar.DAY_OF_WEEK-Calendar.SUNDAY;
+            Calendar c = Calendar.getInstance();
+            int currentDay = c.get(Calendar.DAY_OF_WEEK) - 1;
             for (int i = 0; i < allPrograms.get(currentDay).size(); i++) {
-                textView_Programs[i].setText(allPrograms.get(currentDay).get(i).getTitle());
+                String title = "\n" + allPrograms.get(currentDay).get(i).getTitle() + "\n";
+                textView_Programs[i].setText(title);
             }
         }
     }
@@ -288,7 +331,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Log.d("Position", Integer.toString(position));
         for (int i = 0; i < allPrograms.get(position).size(); i++) {
-            textView_Programs[i].setText(allPrograms.get(position).get(i).getTitle());
+            String title = "\n" + allPrograms.get(position).get(i).getTitle() + "\n";
+            textView_Programs[i].setText(title);
         }
     }
 

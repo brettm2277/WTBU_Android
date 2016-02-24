@@ -306,10 +306,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, Schedule.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_history) {
-
-        } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);

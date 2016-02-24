@@ -99,6 +99,10 @@ public class MyApplication extends Application {
             if (ready_to_play) {    //if the player is done loading and is ready
                 player.start();     //start the player
                 clicked_play = true;    //set clicked to true, probably not useful since won't be used again
+                //change notification action to stop button
+                mBuilder.mActions.clear();  //remove loading icon
+                mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
+                manager.notify(2, mBuilder.build());    //show notification
             } else {                //if it's not done loading yet
                 clicked_play = true;    //the user clicked play
                 //show progress dialog while it's loading
