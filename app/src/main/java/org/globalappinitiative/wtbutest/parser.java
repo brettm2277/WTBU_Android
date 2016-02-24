@@ -68,7 +68,7 @@ class Song {
     }
 }
 
-class XMLParser {
+class XMLParser { // Changed from class Parser due to import issues
     public List<Song> parse(String inputXML, List<Song> songLog) {
         Document songList = Jsoup.parse(inputXML, "", Parser.xmlParser());
         boolean hasSeenTitle = false;	// The RSS feed xml has one instance of '<title>' before the ones preceding actual song info
