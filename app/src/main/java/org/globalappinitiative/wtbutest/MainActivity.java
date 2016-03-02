@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity
     private AudioManager audioManager;  //allows for changing the volume
 
     private TextView textView_artist_song;
-
     private ImageView album_art;
 
     RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)

@@ -6,8 +6,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +57,11 @@ class Song {
         songTitle = title;
     }
 
+    public void setStart(long startTime) { // Gets the time the song starts
+        start = startTime;
+        end = start + trackLength;
+    }
+
     public void setArtist(String artist) {	// A function to set the artist name
         artistName = artist;
     }
@@ -82,8 +90,18 @@ class XMLParser { // Changed from class Parser due to import issues
                 String artistAndTitle = title.text();
                 String[] split = artistAndTitle.split(": ");
                 String artistName = split[0];
-                String songTitle = split[1].substring(1, split[1].length()-1);
-                Song tempSong = new Song(songTitle, artistName);		// Declare a song, assign the parsed values to it, and add it to the songLog list
+                String songTitle = split[1].substring(1, split[1].length() - 1);
+                Song tempSong = new Song(songTitle, artistName); //  Declare a song, assign the parsed values to it, and add it to the songLog list
+                try { // If publish date available, provide start time as well
+                    Element pubDate = song.select("pubDate").first();
+                    String timeStart = pubDate.text();
+                    SimpleDateFormat f = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
+                    Date d = f.parse(timeStart);
+                    long songStart = d.getTime();
+                    tempSong.setStart(songStart);		// Set the start of the song
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 if (songLog.isEmpty() || !tempSong.isSameSong(songLog.get(songLog.size() - 1))) {
                     songLog.add(tempSong);
                 }
