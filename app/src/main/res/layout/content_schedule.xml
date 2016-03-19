@@ -370,43 +370,6 @@
         </LinearLayout>
     </ScrollView>
 
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/control_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="20dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/buttonPlay"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/play_button" />
-
-            <ImageView
-                android:id="@+id/buttonPause"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/pause_button"
-                android:visibility="invisible" />
-
-            <SeekBar
-                android:id="@+id/volumeBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/buttonPlay"
-                android:paddingLeft="20dp"
-                android:paddingStart="20dp" />
-
-        </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
-
+    <include layout="@layout/app_bar_bottom" />
 
 </RelativeLayout>

@@ -43,11 +43,13 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
-    private SeekBar volumeBar;          //volume bar
 
     private AudioManager audioManager;  //allows for changing the volume
 
     private TextView textView_artist_song;
+    public TextView textView_artist_name;
+    public TextView textView_song_name;
+
     private ImageView album_art;
 
     RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
@@ -115,29 +117,11 @@ public class MainActivity extends AppCompatActivity
             buttonPause.setVisibility(View.INVISIBLE);
         }
 
-
-
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
-        int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
-        volumeBar.setProgress(current_volume * 7);
-        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
-                // Pass the slider value (integer between 0 and 100) to setVolume() method
-                ((MyApplication) getApplication()).setVolume(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
 
         textView_artist_song = (TextView) findViewById(R.id.textView_artist_song);
+        textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
+        textView_song_name = (TextView) findViewById(R.id.textView_song_name);
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
 
@@ -161,13 +145,18 @@ public class MainActivity extends AppCompatActivity
                             s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
                         }
                         if (!songLog.get(songLog.size()-1).isSameSong(nowPlaying)) { // no need to get album information if song is the same
-                            nowPlaying = songLog.get(songLog.size()-1);
-                            artist_and_title = nowPlaying.getArtist().replace("&amp;", "&") + " - " + nowPlaying.getTitle();
-
-                            textView_artist_song.setText(artist_and_title);
-
+                            nowPlaying = songLog.get(songLog.size() - 1);
                             current_artist = nowPlaying.getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
                             current_title = nowPlaying.getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");      //get most recent song
+                            ((MyApplication) MainActivity.this.getApplication()).setArtistName(current_artist);
+                            ((MyApplication) MainActivity.this.getApplication()).setSongName(current_title);
+
+                            artist_and_title = current_artist + " - " + current_title;
+
+                            textView_artist_song.setText(artist_and_title);
+                            textView_artist_name.setText(current_artist);
+                            textView_song_name.setText(current_title);
+
                             getSongArtLength(nowPlaying);                                            //get the url for the album artwork for this song
                         }
 
