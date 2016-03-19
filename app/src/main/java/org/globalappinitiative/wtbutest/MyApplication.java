@@ -45,6 +45,7 @@ public class MyApplication extends Application {
     private boolean ready_to_play = false;
     private boolean clicked_play = false;
 
+    private boolean [][] usrFavorites = new boolean[7][10];
 
     public void onCreate() {
         super.onCreate();
@@ -243,7 +244,7 @@ public class MyApplication extends Application {
     public void add_favorite(int day, int time) {
         SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
         SharedPreferences.Editor editor = favorites.edit();
-
+        usrFavorites[day][time] = true;
         editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), true);
         editor.apply();
     }
@@ -251,9 +252,13 @@ public class MyApplication extends Application {
     public void remove_favorite(int day, int time) {
         SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
         SharedPreferences.Editor editor = favorites.edit();
-
+        usrFavorites[day][time] = false;
         editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false);
         editor.apply();
+    }
+
+    public boolean check_favorite(int day, int time) {
+        return usrFavorites[day][time];
     }
 
     public void removeNotification() {
