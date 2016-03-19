@@ -48,15 +48,27 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block1"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star1" />
+
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -85,15 +97,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block2"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star2" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -123,15 +145,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block3"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program3"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star3" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -159,17 +191,26 @@
                     android:paddingRight="20dp">
                     <LinearLayout
                         android:layout_width="match_parent"
+                        android:id="@+id/block4"
                         android:layout_height="match_parent"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program4"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/grey_square"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star4" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -198,16 +239,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block5"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program5"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/grey_square"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star5" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -237,16 +287,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block6"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program6"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/grey_square"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star6" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -276,15 +335,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block7"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program7"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star7" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -314,15 +383,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block8"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program8"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star8" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -342,7 +421,7 @@
                     android:layout_centerVertical="true"
                     android:text="10 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -352,15 +431,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block9"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star9" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -380,7 +469,7 @@
                     android:layout_centerVertical="true"
                     android:text="12 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -390,16 +479,25 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/block10"
                         android:background="@drawable/grey_square">
                         <TextView
                             android:id="@+id/textView_program10"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/grey_square"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:paddingLeft="20dp"
                             android:text="\n \n"
                             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                             android:textColor="@android:color/white" />
+                        <View
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0"
+                            android:background="@drawable/star_empty"
+                            android:id="@+id/star10" />
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>

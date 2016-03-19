@@ -28,6 +28,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -73,6 +74,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     ArrayList<ArrayList<ScheduleItem>> allPrograms = new ArrayList<ArrayList<ScheduleItem>>();
 
     private TextView[] textView_Programs = new TextView[10];
+    private LinearLayout[] linearLayouts = new LinearLayout[10];
     private RelativeLayout[] relativeLayouts = new RelativeLayout[10];
 
     private boolean first_time = true;
@@ -122,6 +124,18 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_Programs[8] = (TextView) findViewById(R.id.textView_program9);
         textView_Programs[9] = (TextView) findViewById(R.id.textView_program10);
 
+        linearLayouts[0] = (LinearLayout) findViewById(R.id.block1);
+        linearLayouts[1] = (LinearLayout) findViewById(R.id.block2);
+        linearLayouts[2] = (LinearLayout) findViewById(R.id.block3);
+        linearLayouts[3] = (LinearLayout) findViewById(R.id.block4);
+        linearLayouts[4] = (LinearLayout) findViewById(R.id.block5);
+        linearLayouts[5] = (LinearLayout) findViewById(R.id.block6);
+        linearLayouts[6] = (LinearLayout) findViewById(R.id.block7);
+        linearLayouts[7] = (LinearLayout) findViewById(R.id.block8);
+        linearLayouts[8] = (LinearLayout) findViewById(R.id.block9);
+        linearLayouts[9] = (LinearLayout) findViewById(R.id.block10);
+
+
         relativeLayouts[0] = (RelativeLayout) findViewById(R.id.rl1);
         relativeLayouts[1] = (RelativeLayout) findViewById(R.id.rl2);
         relativeLayouts[2] = (RelativeLayout) findViewById(R.id.rl3);
@@ -161,7 +175,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
         textView_artist_name.setText(((MyApplication)getApplication()).getArtistName());
-        textView_song_name.setText(((MyApplication)getApplication()).getSongName());
+        textView_song_name.setText(((MyApplication) getApplication()).getSongName());
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
     }
@@ -242,7 +256,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             hour = hour - 1;
         }
         Log.d("New hour", Integer.toString(hour));
-        textView_Programs[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.
+        linearLayouts[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.
     }
 
     @Override
