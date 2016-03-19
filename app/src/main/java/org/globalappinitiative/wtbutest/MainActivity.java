@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity
 
                             getSongArtLength(nowPlaying);                                            //get the url for the album artwork for this song
                         }
+                        //((MyApplication) MainActivity.this.getApplication()).updateNotificationInfo(current_artist, current_title, art);    //update notification with new album art, song/title
 
                     }
                 }, new Response.ErrorListener() {

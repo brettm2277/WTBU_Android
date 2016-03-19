@@ -74,6 +74,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     ArrayList<ArrayList<ScheduleItem>> allPrograms = new ArrayList<ArrayList<ScheduleItem>>();
 
     private TextView[] textView_Programs = new TextView[10];
+    private View[] starButtons = new View[10];
     private LinearLayout[] linearLayouts = new LinearLayout[10];
     private RelativeLayout[] relativeLayouts = new RelativeLayout[10];
 
@@ -124,18 +125,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_Programs[8] = (TextView) findViewById(R.id.textView_program9);
         textView_Programs[9] = (TextView) findViewById(R.id.textView_program10);
 
-        linearLayouts[0] = (LinearLayout) findViewById(R.id.block1);
-        linearLayouts[1] = (LinearLayout) findViewById(R.id.block2);
-        linearLayouts[2] = (LinearLayout) findViewById(R.id.block3);
-        linearLayouts[3] = (LinearLayout) findViewById(R.id.block4);
-        linearLayouts[4] = (LinearLayout) findViewById(R.id.block5);
-        linearLayouts[5] = (LinearLayout) findViewById(R.id.block6);
-        linearLayouts[6] = (LinearLayout) findViewById(R.id.block7);
-        linearLayouts[7] = (LinearLayout) findViewById(R.id.block8);
-        linearLayouts[8] = (LinearLayout) findViewById(R.id.block9);
-        linearLayouts[9] = (LinearLayout) findViewById(R.id.block10);
-
-
         relativeLayouts[0] = (RelativeLayout) findViewById(R.id.rl1);
         relativeLayouts[1] = (RelativeLayout) findViewById(R.id.rl2);
         relativeLayouts[2] = (RelativeLayout) findViewById(R.id.rl3);
@@ -147,9 +136,31 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         relativeLayouts[8] = (RelativeLayout) findViewById(R.id.rl9);
         relativeLayouts[9] = (RelativeLayout) findViewById(R.id.rl10);
 
+        linearLayouts[0] = (LinearLayout) findViewById(R.id.block1);
+        linearLayouts[1] = (LinearLayout) findViewById(R.id.block2);
+        linearLayouts[2] = (LinearLayout) findViewById(R.id.block3);
+        linearLayouts[3] = (LinearLayout) findViewById(R.id.block4);
+        linearLayouts[4] = (LinearLayout) findViewById(R.id.block5);
+        linearLayouts[5] = (LinearLayout) findViewById(R.id.block6);
+        linearLayouts[6] = (LinearLayout) findViewById(R.id.block7);
+        linearLayouts[7] = (LinearLayout) findViewById(R.id.block8);
+        linearLayouts[8] = (LinearLayout) findViewById(R.id.block9);
+        linearLayouts[9] = (LinearLayout) findViewById(R.id.block10);
+
+        starButtons[0] = (View) findViewById(R.id.star1);
+        starButtons[1] = (View) findViewById(R.id.star2);
+        starButtons[2] = (View) findViewById(R.id.star3);
+        starButtons[3] = (View) findViewById(R.id.star4);
+        starButtons[4] = (View) findViewById(R.id.star5);
+        starButtons[5] = (View) findViewById(R.id.star6);
+        starButtons[6] = (View) findViewById(R.id.star7);
+        starButtons[7] = (View) findViewById(R.id.star8);
+        starButtons[8] = (View) findViewById(R.id.star9);
+        starButtons[9] = (View) findViewById(R.id.star10);
+
         for (int i=0; i<10; i++)
         {
-            relativeLayouts[i].setOnClickListener(this);
+            starButtons[i].setOnClickListener(this);
         }
 
 
@@ -311,7 +322,17 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
 
         for (int i=0; i<10; i++) {
-            if (view == relativeLayouts[i]) {
+            if (view == starButtons[i]) {
+                if (((MyApplication) this.getApplication()).check_favorite(position, i)) {
+                    ((MyApplication) this.getApplication()).remove_favorite(position, i);
+                    starButtons[i].setBackgroundResource(R.drawable.star_empty);
+                }
+
+                else {
+                    ((MyApplication) this.getApplication()).add_favorite(position, i);
+                    starButtons[i].setBackgroundResource(R.drawable.star_full);
+                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
                 Log.d("this Position", Integer.toString(position));
                 builder.setMessage("Get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
@@ -384,6 +405,16 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         this.position = position;
+        for (int i = 0; i < 10; i++) {
+            if (((MyApplication) this.getApplication()).check_favorite(position, i)) {
+                starButtons[i].setBackgroundResource(R.drawable.star_full);
+            }
+
+            else {
+                starButtons[i].setBackgroundResource(R.drawable.star_empty);
+            }
+        }
+
         if (first_time) {
             first_time = false;
             Log.d("Position", Integer.toString(position));
