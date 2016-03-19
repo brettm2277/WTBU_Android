@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,9 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -57,6 +65,10 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     ArrayList<ArrayList<ScheduleItem>> allPrograms = new ArrayList<ArrayList<ScheduleItem>>();
 
     private TextView[] textView_Programs = new TextView[10];
+    private RelativeLayout[] relativeLayouts = new RelativeLayout[10];
+
+    private boolean first_time = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +111,19 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_Programs[8] = (TextView) findViewById(R.id.textView_program9);
         textView_Programs[9] = (TextView) findViewById(R.id.textView_program10);
 
+        relativeLayouts[0] = (RelativeLayout) findViewById(R.id.rl1);
+        relativeLayouts[1] = (RelativeLayout) findViewById(R.id.rl2);
+        relativeLayouts[2] = (RelativeLayout) findViewById(R.id.rl3);
+        relativeLayouts[3] = (RelativeLayout) findViewById(R.id.rl4);
+        relativeLayouts[4] = (RelativeLayout) findViewById(R.id.rl5);
+        relativeLayouts[5] = (RelativeLayout) findViewById(R.id.rl6);
+        relativeLayouts[6] = (RelativeLayout) findViewById(R.id.rl7);
+        relativeLayouts[7] = (RelativeLayout) findViewById(R.id.rl8);
+        relativeLayouts[8] = (RelativeLayout) findViewById(R.id.rl9);
+        relativeLayouts[9] = (RelativeLayout) findViewById(R.id.rl10);
 
+
+        animate_vertical();
 
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
@@ -161,6 +185,30 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         spinner = (Spinner) mitem.getActionView();
         setupSpinner(spinner);
         return true;
+    }
+
+    public void animate_vertical() {
+        for (int i=0; i<9; i++)
+        {
+            TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 100, 0);   //from x, to x, from y, to y
+            translateAnimation.setDuration(500);
+            translateAnimation.setStartOffset(75 * i);
+            translateAnimation.setInterpolator(new DecelerateInterpolator());
+            relativeLayouts[i].startAnimation(translateAnimation);
+        }
+    }
+
+    public void animate_fade() {
+        for (int i=0; i<9; i++)
+        {
+            AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.2f);   //animate from visible to transparent
+            alphaAnimation.setDuration(250);
+            alphaAnimation.setStartOffset(10 * i);
+            alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
+            alphaAnimation.setFillAfter(true);
+
+            relativeLayouts[i].startAnimation(alphaAnimation);
+        }
     }
 
     public void setupSpinner(Spinner spinner) {
@@ -328,11 +376,29 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("Position", Integer.toString(position));
-        for (int i = 0; i < allPrograms.get(position).size(); i++) {
-            String title = "\n" + allPrograms.get(position).get(i).getTitle() + "\n";
-            textView_Programs[i].setText(title);
+    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+        if (first_time) {
+            first_time = false;
+            Log.d("Position", Integer.toString(position));
+            for (int i = 0; i < allPrograms.get(position).size(); i++) {
+                String title = "\n" + allPrograms.get(position).get(i).getTitle() + "\n";
+                textView_Programs[i].setText(title);
+            }
+        }
+        else {
+            animate_fade();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animate_vertical();
+                    Log.d("Position", Integer.toString(position));
+                    for (int i = 0; i < allPrograms.get(position).size(); i++) {
+                        String title = "\n" + allPrograms.get(position).get(i).getTitle() + "\n";
+                        textView_Programs[i].setText(title);
+                    }
+                }
+            }, 300);
         }
     }
 
