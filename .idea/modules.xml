@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WTBUTest.iml" filepath="$PROJECT_DIR$/WTBUTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WTBU_Android.iml" filepath="$PROJECT_DIR$/WTBU_Android.iml" />
     </modules>
   </component>
 </project>
