@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity
 
     private AudioManager audioManager;  //allows for changing the volume
 
-    private TextView textView_artist_song;
     public TextView textView_artist_name;
     public TextView textView_song_name;
 
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
 
-        textView_artist_song = (TextView) findViewById(R.id.textView_artist_song);
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
         // Instantiate the RequestQueue.
@@ -153,7 +151,6 @@ public class MainActivity extends AppCompatActivity
 
                             artist_and_title = current_artist + " - " + current_title;
 
-                            textView_artist_song.setText(artist_and_title);
                             textView_artist_name.setText(current_artist);
                             textView_song_name.setText(current_title);
 
@@ -229,7 +226,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void run() {
             if (nowPlaying.getSongEnd() < Calendar.getInstance().getTimeInMillis() ) {
-                textView_artist_song.setText(getString(R.string.wtbu_radio));
                 album_art.setImageResource(R.drawable.cover_art_android);
             }
             getRSSData();   //gets RSS data, which calls the getAlbumArtURL function, which calls the getAlbumArt function, refreshing the song/artist and album art
