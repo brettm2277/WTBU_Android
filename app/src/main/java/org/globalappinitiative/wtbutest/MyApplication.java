@@ -1,17 +1,21 @@
 package org.globalappinitiative.wtbutest;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.parse.Parse;
 
@@ -47,8 +51,11 @@ public class MyApplication extends Application {
 
     private boolean [][] usrFavorites = new boolean[7][10];
 
+
+    @Override
     public void onCreate() {
         super.onCreate();
+
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
 
@@ -94,7 +101,7 @@ public class MyApplication extends Application {
                     //change notification action to stop button
                     mBuilder.mActions.clear();  //remove loading icon
                     mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
-                    manager.notify(2, mBuilder.build());    //show notification
+                    manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
                 }
             }
         });
@@ -108,7 +115,7 @@ public class MyApplication extends Application {
                 //change notification action to stop button
                 mBuilder.mActions.clear();  //remove loading icon
                 mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
-                manager.notify(2, mBuilder.build());    //show notification
+                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
             } else {                //if it's not done loading yet
                 clicked_play = true;    //the user clicked play
                 //show progress dialog while it's loading
@@ -119,7 +126,7 @@ public class MyApplication extends Application {
                 //change notification to show the loading icon
                 mBuilder.mActions.clear();  //remove the play icon
                 mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
-                manager.notify(2, mBuilder.build());    //show notification
+                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
             }
             first_time = false; //no longer the first time
         }
@@ -141,7 +148,7 @@ public class MyApplication extends Application {
                 //change notification to show the loading icon
                 mBuilder.mActions.clear();  //remove the play icon
                 mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
-                manager.notify(2, mBuilder.build());    //show notification
+                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
 
                 player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
@@ -152,7 +159,7 @@ public class MyApplication extends Application {
                         //change notification action to stop button
                         mBuilder.mActions.clear();  //remove loading icon
                         mBuilder.addAction(R.drawable.ic_stop_white_24dp, "", pendingIntentCancel).build();     //add stop button to notification
-                        manager.notify(2, mBuilder.build());    //show notification
+                        manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
                     }
                 });
             }
@@ -167,7 +174,7 @@ public class MyApplication extends Application {
             //change notification action to play button
             mBuilder.mActions.clear();
             mBuilder.addAction(R.drawable.ic_play_arrow_white_24dp, "", pendingIntentCancel).build();
-            manager.notify(2, mBuilder.build());
+            manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());
         }
     }
 
@@ -189,41 +196,68 @@ public class MyApplication extends Application {
         return song_name;
     }
 
+    // Add an accessor method for setting the volume of the media player
+    public void setVolume(int value) {
+        // setVolume takes a fraction between 0 and 1, and input is out of 100, so need to convert
+        float convertedSliderVal = ((float) value) / 100;
+        // setVolume takes a left value and a right value, I believe that this pans the sound between speakers sort of like stereo sound. Can anyone confirm? --Evan
+        player.setVolume(convertedSliderVal, convertedSliderVal);
+    }
+
     public boolean isPlaying() {
         return player.isPlaying();
     }
 
-    public void createNotification(String artist, String title, Bitmap art) {   //does the initial creation of the notification
-        resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
-        recieverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
 
-        //pending intents used for the notification
-        resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        pendingIntentCancel = PendingIntent.getBroadcast(context, 0, recieverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    public void createNotification(final String artist, final String title, final Bitmap art) {   //does the initial creation of the notification
 
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder binder) {
+                ((KillNotificationsService.KillBinder) binder).service.startService(new Intent(
+                        context, KillNotificationsService.class));
+                resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
+                recieverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
 
-        mBuilder = new NotificationCompat.Builder(this);    //build notification
-        mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
-                .setLargeIcon(art)
-                .setContentTitle("WTBU")
-                .setContentText(artist)
-                .setSubText(title)
-                .addAction(isPlaying()  ? R.drawable.ic_stop_white_24dp
-                                        : R.drawable.ic_play_arrow_white_24dp
-                                        , "", pendingIntentCancel)
-                .setStyle(new NotificationCompat.MediaStyle().setShowCancelButton(true))    //MediaStyle makes it look nice
-                .setContentIntent(resultPendingIntent)                                      //when the main part of notification is clicked
-                .build();
-        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(2, mBuilder.build());                                                //show notification
+                //pending intents used for the notification
+                resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntentCancel = PendingIntent.getBroadcast(context, 0, recieverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                Log.d("Service", "builder");
+                mBuilder = new NotificationCompat.Builder(context);    //build notification
+                mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
+                        .setLargeIcon(art)
+                        .setContentTitle("WTBU")
+                        .setContentText(artist)
+                        .setSubText(title)
+                        .addAction(isPlaying()  ? R.drawable.ic_stop_white_24dp
+                                : R.drawable.ic_play_arrow_white_24dp
+                                , "", pendingIntentCancel)
+                        .setStyle(new NotificationCompat.MediaStyle().setShowCancelButton(true))    //MediaStyle makes it look nice
+                        .setContentIntent(resultPendingIntent)                                      //when the main part of notification is clicked
+                        .build();
+                manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());                                                //show notification
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+
+        bindService(new Intent(context, KillNotificationsService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     public void updateNotificationInfo(String artist, String title, Bitmap art) {           //updates the notification with new album art and artist/song
+        Log.d("Update", "notification");
         mBuilder.setLargeIcon(art)
                 .setContentText(artist)
                 .setSubText(title)
                 .build();
-        manager.notify(2, mBuilder.build());
+        manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());
     }
 
     public void setup_prefs() {
@@ -244,7 +278,7 @@ public class MyApplication extends Application {
     public void add_favorite(int day, int time) {
         SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
         SharedPreferences.Editor editor = favorites.edit();
-        usrFavorites[day][time] = true;
+
         editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), true);
         editor.apply();
     }
@@ -252,7 +286,7 @@ public class MyApplication extends Application {
     public void remove_favorite(int day, int time) {
         SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
         SharedPreferences.Editor editor = favorites.edit();
-        usrFavorites[day][time] = false;
+
         editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false);
         editor.apply();
     }

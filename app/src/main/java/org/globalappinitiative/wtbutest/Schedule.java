@@ -333,7 +333,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                     starButtons[i].setBackgroundResource(R.drawable.star_full);
                 }
 
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
+                AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
                 Log.d("this Position", Integer.toString(position));
                 builder.setMessage("Get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
                         .setPositiveButton("yes", new DialogInterface.OnClickListener() {
@@ -346,7 +346,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         });
                 // Create the AlertDialog object and return it
                 builder.create();
-                builder.show();*/
+                builder.show();
             }
         }
     }
