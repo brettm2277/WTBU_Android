@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
         public void run() {
             if (nowPlaying.getSongEnd() < Calendar.getInstance().getTimeInMillis() ) {
                 textView_artist_song.setText(getString(R.string.wtbu_radio));
-                album_art.setImageResource(R.drawable.wtbu_app);
+                album_art.setImageResource(R.drawable.cover_art_android);
             }
             getRSSData();   //gets RSS data, which calls the getAlbumArtURL function, which calls the getAlbumArt function, refreshing the song/artist and album art
             handler.postDelayed(this, 30000);   //will run again in 30 seconds

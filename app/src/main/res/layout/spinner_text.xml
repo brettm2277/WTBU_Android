@@ -3,6 +3,11 @@
           android:id="@+id/spinnerTarget"
           android:layout_width="fill_parent"
           android:layout_height="?attr/dropdownListPreferredItemHeight"
+          android:gravity="center_vertical"
           android:textColor="#FFFFFF"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:paddingLeft="2sp"
+          android:paddingRight="2sp"
           android:textSize="20sp"
     />
