@@ -219,7 +219,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         String[] items = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         //wrap the items in the Adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(Schedule.this, android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_text);
 
         //assign adapter to the Spinner
         spinner.setAdapter(adapter);
