@@ -1,6 +1,7 @@
 package org.globalappinitiative.wtbutest;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -69,6 +71,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     private boolean first_time = true;
 
+    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +125,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         relativeLayouts[7] = (RelativeLayout) findViewById(R.id.rl8);
         relativeLayouts[8] = (RelativeLayout) findViewById(R.id.rl9);
         relativeLayouts[9] = (RelativeLayout) findViewById(R.id.rl10);
+
+        for (int i=0; i<10; i++)
+        {
+            relativeLayouts[i].setOnClickListener(this);
+        }
 
 
         animate_vertical();
@@ -322,6 +331,25 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
+
+        for (int i=0; i<10; i++) {
+            if (view == relativeLayouts[i]) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
+                Log.d("this Position", Integer.toString(position));
+                builder.setMessage("Get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
+                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        })
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create();
+                builder.show();
+            }
+        }
     }
 
     private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> { // Reads the schedule data
@@ -377,6 +405,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+        this.position = position;
         if (first_time) {
             first_time = false;
             Log.d("Position", Integer.toString(position));
