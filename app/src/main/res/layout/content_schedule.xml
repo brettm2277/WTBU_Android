@@ -410,5 +410,4 @@
 
     <include layout="@layout/app_bar_bottom" />
 
-
 </RelativeLayout>

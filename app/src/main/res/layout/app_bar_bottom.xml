@@ -18,14 +18,37 @@
             android:layout_height="75dp"
             android:src="@drawable/play_button" />
 
-        <SeekBar
-            android:id="@+id/volumeBar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/buttonPause"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:src="@drawable/pause_button"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Artist Name"
+            android:id="@+id/textView_artist_name"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/buttonPlay"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Song Name"
+            android:id="@+id/textView_song_name"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/buttonPlay"
-            android:paddingLeft="20dp"
-            android:paddingStart="20dp" />
+            android:layout_alignLeft="@+id/textView_artist_name"
+            android:layout_alignStart="@+id/textView_artist_name"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"/>
 
     </RelativeLayout>
 </android.support.design.widget.AppBarLayout>

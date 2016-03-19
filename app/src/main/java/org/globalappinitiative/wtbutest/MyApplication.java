@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.parse.Parse;
 
@@ -28,6 +29,9 @@ public class MyApplication extends Application {
 
     private Intent resultIntent;
     private Intent recieverIntent;
+
+    private String artist_name;
+    private String song_name;
 
     private PendingIntent resultPendingIntent;
     private PendingIntent pendingIntentCancel;
@@ -166,12 +170,22 @@ public class MyApplication extends Application {
         }
     }
 
-    // Add an accessor method for setting the volume of the media player
-    public void setVolume(int value) {
-        // setVolume takes a fraction between 0 and 1, and input is out of 100, so need to convert
-        float convertedSliderVal = ((float) value) / 100;
-        // setVolume takes a left value and a right value, I believe that this pans the sound between speakers sort of like stereo sound. Can anyone confirm? --Evan
-        player.setVolume(convertedSliderVal, convertedSliderVal);
+    public void setArtistName(String name) {
+        Log.d("Artist Name: ", name);
+        artist_name = name;
+    }
+
+    public void setSongName(String name) {
+        Log.d("Song Name: ", name);
+        song_name = name;
+    }
+
+    public String getArtistName() {
+        return artist_name;
+    }
+
+    public String getSongName() {
+        return song_name;
     }
 
     public boolean isPlaying() {

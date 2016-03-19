@@ -29,10 +29,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -45,6 +48,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +59,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
-    private SeekBar volumeBar;          //volume bar
+
+    private TextView textView_artist_name; // artist name at bottom
+    private TextView textView_song_name;   // song name at bottom
 
     private AudioManager audioManager;  //allows for changing the volume
 
@@ -100,6 +106,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         initializeUI();
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
         new JsoupAsyncTask().execute();
+
     }
 
     protected void initializeUI()
@@ -151,24 +158,12 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             buttonPause.setVisibility(View.INVISIBLE);
         }
 
+        textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
+        textView_song_name = (TextView) findViewById(R.id.textView_song_name);
+        textView_artist_name.setText(((MyApplication)getApplication()).getArtistName());
+        textView_song_name.setText(((MyApplication)getApplication()).getSongName());
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
-        int current_volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        volumeBar = (SeekBar) findViewById(R.id.volumeBar);                                                 //initializes seekbar which acts as the volume slider
-        volumeBar.setProgress(current_volume * 7);
-        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {                        //seekBarChangeListener runs whenever the volume slider is moved
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {                              //returns an integer i which tells us out of 100 how far the slider is moved to the right
-                ((MyApplication) getApplication()).setVolume(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
     }
 
     @Override
@@ -247,38 +242,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             hour = hour - 1;
         }
         Log.d("New hour", Integer.toString(hour));
-        switch (hour) {
-            case 6:
-                textView_Programs[0].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 8:
-                textView_Programs[1].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 10:
-                textView_Programs[2].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 12:
-                textView_Programs[3].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 14:
-                textView_Programs[4].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 16:
-                textView_Programs[5].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 18:
-                textView_Programs[6].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 20:
-                textView_Programs[7].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 22:
-                textView_Programs[8].setBackgroundResource(R.drawable.red_square);
-                return;
-            default:
-                textView_Programs[9].setBackgroundResource(R.drawable.red_square);
-                return;
-        }
+        textView_Programs[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.
     }
 
     @Override
