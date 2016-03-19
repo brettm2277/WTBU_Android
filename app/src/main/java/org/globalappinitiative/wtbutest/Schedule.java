@@ -242,38 +242,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             hour = hour - 1;
         }
         Log.d("New hour", Integer.toString(hour));
-        switch (hour) {
-            case 6:
-                textView_Programs[0].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 8:
-                textView_Programs[1].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 10:
-                textView_Programs[2].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 12:
-                textView_Programs[3].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 14:
-                textView_Programs[4].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 16:
-                textView_Programs[5].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 18:
-                textView_Programs[6].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 20:
-                textView_Programs[7].setBackgroundResource(R.drawable.red_square);
-                return;
-            case 22:
-                textView_Programs[8].setBackgroundResource(R.drawable.red_square);
-                return;
-            default:
-                textView_Programs[9].setBackgroundResource(R.drawable.red_square);
-                return;
-        }
+        textView_Programs[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.
     }
 
     @Override
