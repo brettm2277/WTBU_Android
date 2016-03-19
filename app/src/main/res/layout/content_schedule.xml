@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.globalappinitiative.wtbutest.Schedule">
+    tools:context="org.globalappinitiative.wtbutest.Schedule"
+    android:background="@color/contentBkgColor">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -19,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="20dp">
+            android:paddingLeft="18dp"
+            android:background="@color/contentBkgColor">
 
             <RelativeLayout
                 android:id="@+id/rl1"
@@ -35,7 +37,7 @@
                     android:layout_centerVertical="true"
                     android:text="6 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -43,15 +45,19 @@
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
 
-                    <TextView
-                        android:id="@+id/textView_program1"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -69,23 +75,26 @@
                     android:layout_centerVertical="true"
                     android:text="8 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program2"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -104,23 +113,26 @@
                     android:layout_centerVertical="true"
                     android:text="10 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program3"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -138,23 +150,27 @@
                     android:layout_centerVertical="true"
                     android:text="12 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program4"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_square"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -172,23 +188,27 @@
                     android:layout_centerVertical="true"
                     android:text="2 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program5"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_square"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -207,23 +227,27 @@
                     android:layout_centerVertical="true"
                     android:text="4 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program6"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_square"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -242,23 +266,26 @@
                     android:layout_centerVertical="true"
                     android:text="6 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program7"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program7"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -277,23 +304,26 @@
                     android:layout_centerVertical="true"
                     android:text="8 PM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white" />
+                    android:textColor="#b9b8d2" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program8"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program8"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -319,16 +349,19 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program9"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program9"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -354,16 +387,20 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="85dp"
                     android:paddingRight="20dp">
-
-                    <TextView
-                        android:id="@+id/textView_program10"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/grey_square"
-                        android:paddingLeft="20dp"
-                        android:text="\n \n"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/grey_square">
+                        <TextView
+                            android:id="@+id/textView_program10"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grey_square"
+                            android:paddingLeft="20dp"
+                            android:text="\n \n"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                            android:textColor="@android:color/white" />
+                    </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -371,42 +408,7 @@
     </ScrollView>
 
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/control_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="20dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/buttonPlay"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/play_button" />
-
-            <ImageView
-                android:id="@+id/buttonPause"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/pause_button"
-                android:visibility="invisible" />
-
-            <SeekBar
-                android:id="@+id/volumeBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/buttonPlay"
-                android:paddingLeft="20dp"
-                android:paddingStart="20dp" />
-
-        </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
+    <include layout="@layout/app_bar_bottom" />
 
 
 </RelativeLayout>
