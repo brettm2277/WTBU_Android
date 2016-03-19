@@ -117,6 +117,7 @@ public class MyApplication extends Application {
 
                 //change notification to show the loading icon
                 mBuilder.mActions.clear();  //remove the play icon
+                mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp); // set small icon to notify that radio is playing
                 mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
                 manager.notify(2, mBuilder.build());    //show notification
             }
@@ -165,6 +166,7 @@ public class MyApplication extends Application {
             initializeMediaPlayer();
             //change notification action to play button
             mBuilder.mActions.clear();
+            mBuilder.setSmallIcon(R.drawable.ic_stop_white_24dp); // set small icon to notify that player is stopped
             mBuilder.addAction(R.drawable.ic_play_arrow_white_24dp, "", pendingIntentCancel).build();
             manager.notify(2, mBuilder.build());
         }
@@ -202,7 +204,7 @@ public class MyApplication extends Application {
 
 
         mBuilder = new NotificationCompat.Builder(this);    //build notification
-        mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
+        mBuilder.setSmallIcon(R.drawable.ic_stop_white_24dp) // application starts with player stopped
                 .setLargeIcon(art)
                 .setContentTitle("WTBU")
                 .setContentText(artist)
