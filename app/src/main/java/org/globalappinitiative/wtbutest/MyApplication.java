@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.support.v7.app.NotificationCompat;
@@ -222,6 +223,37 @@ public class MyApplication extends Application {
                 .setSubText(title)
                 .build();
         manager.notify(2, mBuilder.build());
+    }
+
+    public void setup_prefs() {
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
+        SharedPreferences.Editor editor = favorites.edit();
+        for (int day=0; day<7; day++)
+        {
+            for (int time = 0; time < 10; time++)
+            {
+                editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false); // ex: 2 4 means Tuesday 2PM since the 2PM show is the fourth one
+            }
+        }
+        // Commit the edits!
+        editor.apply();
+    }
+
+
+    public void add_favorite(int day, int time) {
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
+        SharedPreferences.Editor editor = favorites.edit();
+
+        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), true);
+        editor.apply();
+    }
+
+    public void remove_favorite(int day, int time) {
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
+        SharedPreferences.Editor editor = favorites.edit();
+
+        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false);
+        editor.apply();
     }
 
     public void removeNotification() {
