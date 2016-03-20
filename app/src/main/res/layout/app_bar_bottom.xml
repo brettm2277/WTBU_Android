@@ -43,10 +43,12 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Song Name"
             android:id="@+id/textView_song_name"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/buttonPlay"
-            android:layout_toEndOf="@+id/buttonPlay"/>
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/textView_artist_name"
+            android:layout_alignStart="@+id/textView_artist_name"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"/>
 
     </RelativeLayout>
 </android.support.design.widget.AppBarLayout>

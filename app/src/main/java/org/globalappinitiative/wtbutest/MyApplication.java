@@ -210,11 +210,9 @@ public class MyApplication extends Application {
         return player.isPlaying();
     }
 
-    public void createNotification(String artist, String title, Bitmap art) {   //does the initial creation of the notification
+    public void createNotification(final String artist, final String title, final Bitmap art) {   //does the initial creation of the notification
         resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
         recieverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
-
-    public void createNotification(final String artist, final String title, final Bitmap art) {   //does the initial creation of the notification
 
         ServiceConnection serviceConnection = new ServiceConnection() {
             @Override
