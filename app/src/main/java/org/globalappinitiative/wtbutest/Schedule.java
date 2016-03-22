@@ -80,6 +80,14 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     private boolean first_time = true;
 
+    private boolean first_time_favorite = true;
+
+    private int first_time_favorite_index;
+
+    private boolean first_time_unfavorite = true;
+
+    private int first_time_unfavorite_index;
+
     private int position;
 
     @Override
@@ -217,7 +225,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void animate_vertical() {
-        for (int i=0; i<9; i++)
+        for (int i=0; i<10; i++)
         {
             TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 100, 0);   //from x, to x, from y, to y
             translateAnimation.setDuration(500);
@@ -228,7 +236,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public void animate_fade() {
-        for (int i=0; i<9; i++)
+        for (int i=0; i<10; i++)
         {
             AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.2f);   //animate from visible to transparent
             alphaAnimation.setDuration(250);
@@ -320,34 +328,69 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
-
         for (int i=0; i<10; i++) {
             if (view == starButtons[i]) {
-                if (((MyApplication) this.getApplication()).check_favorite(position, i)) {
-                    ((MyApplication) this.getApplication()).remove_favorite(position, i);
-                    starButtons[i].setBackgroundResource(R.drawable.star_empty);
+                if (((MyApplication) this.getApplication()).checkFavorite(position, i)) {
+                    if (first_time_unfavorite) {
+                        first_time_unfavorite_index = i;
+                        first_time_unfavorite = false;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
+                        Log.d("this Position", Integer.toString(position));
+                        builder.setMessage("No longer get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
+                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        ((MyApplication) Schedule.this.getApplication()).removeFavorite(position, first_time_unfavorite_index);
+                                        starButtons[first_time_unfavorite_index].setBackgroundResource(R.drawable.star_empty);
+                                    }
+                                })
+                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                        // Create the AlertDialog object and return it
+                        builder.create();
+                        builder.show();
+
+                    }
+                    else {
+                        ((MyApplication) this.getApplication()).removeFavorite(position, i);
+                        starButtons[i].setBackgroundResource(R.drawable.star_empty);
+                    }
                 }
 
                 else {
-                    ((MyApplication) this.getApplication()).add_favorite(position, i);
-                    starButtons[i].setBackgroundResource(R.drawable.star_full);
+                    if (first_time_favorite) {
+                        first_time_favorite_index = i;
+                        first_time_favorite = false;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
+                        Log.d("this Position", Integer.toString(position));
+                        builder.setMessage("Get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
+                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        ((MyApplication) Schedule.this.getApplication()).addFavorite(position, first_time_favorite_index);
+                                        starButtons[first_time_favorite_index].setBackgroundResource(R.drawable.star_full);
+                                    }
+                                })
+                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                        // Create the AlertDialog object and return it
+                        builder.create();
+                        builder.show();
+                    }
+                    else {
+                        ((MyApplication) this.getApplication()).addFavorite(position, i);
+                        starButtons[i].setBackgroundResource(R.drawable.star_full);
+                    }
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
-                Log.d("this Position", Integer.toString(position));
-                builder.setMessage("Get notified when " + allPrograms.get(position).get(i).getTitle() + " is on?")
-                        .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        })
-                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                            }
-                        });
-                // Create the AlertDialog object and return it
-                builder.create();
-                builder.show();
+
             }
+
+
+
+
         }
     }
 
@@ -406,7 +449,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
         this.position = position;
         for (int i = 0; i < 10; i++) {
-            if (((MyApplication) this.getApplication()).check_favorite(position, i)) {
+            if (((MyApplication) this.getApplication()).checkFavorite(position, i)) {
                 starButtons[i].setBackgroundResource(R.drawable.star_full);
             }
 

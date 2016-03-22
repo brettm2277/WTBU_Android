@@ -78,12 +78,11 @@ class Song {
 
 class XMLParser { // Changed from class Parser due to import issues
     public List<Song> parse(String inputXML, List<Song> songLog) {
-        Document songList = Jsoup.parse(inputXML, "UTF-8", Parser.xmlParser());
-        boolean hasSeenTitle = false;	// The RSS feed xml has one instance of '<title>' before the ones preceding actual song info
+		Document songList = Jsoup.parse(inputXML, "UTF-8", Parser.xmlParser());         boolean hasSeenTitle = false;	// The RSS feed xml has one instance of '<title>' before the ones preceding actual song info
         if (songLog.isEmpty()) {		// If the song log is completely empty, we need to get all of the song history
 										/* NOTE: parsing the XML from top to bottom reads the songs into the list in reverse order, so
 										 we'll need to reverse the list at the end (only the first time though, after that just add new
-										 songs to the end of the list */
+										 songs to the end fo the list */
             Elements songItems = songList.select("item");
             for (Element song : songItems) {
                 Element title = song.select("title").first();

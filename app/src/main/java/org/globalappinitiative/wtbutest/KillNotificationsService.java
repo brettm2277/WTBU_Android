@@ -9,6 +9,9 @@ import android.os.IBinder;
 /**
  * Created by BrettM on 3/19/2016.
  */
+
+//service that starts itself when the app is killed, and then removes the main notification with the album art
+//since the play/stop button doesn't work when the app is killed
 public class KillNotificationsService extends Service {
 
     public class KillBinder extends Binder {

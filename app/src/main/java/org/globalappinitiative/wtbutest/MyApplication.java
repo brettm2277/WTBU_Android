@@ -1,6 +1,6 @@
 package org.globalappinitiative.wtbutest;
 
-import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,7 +12,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -24,7 +23,7 @@ import java.io.IOException;
 /**
  * Created by BrettM on 11/10/2015.
  */
-public class MyApplication extends Application {
+public class  MyApplication extends Application {
 
     //Media player start/stop now controlled in this class. Can call start/stop from any class to control it
     private MediaPlayer player;
@@ -49,7 +48,7 @@ public class MyApplication extends Application {
     private boolean ready_to_play = false;
     private boolean clicked_play = false;
 
-    private boolean [][] usrFavorites = new boolean[7][10];
+    private boolean [][] userFavorites = new boolean[7][10];
 
 
     @Override
@@ -63,6 +62,22 @@ public class MyApplication extends Application {
 
         initializeMediaPlayer();
         preparePlayer();
+        loadPrefs();
+
+        if (!isMyServiceRunning()){     //check if the service is on that notifies you when your favorite show is on
+            Intent serviceIntent = new Intent(this, MyService.class);   //if it's not already on, start the service
+            MyApplication.this.startService(serviceIntent);
+        }
+    }
+
+    private boolean isMyServiceRunning() {  //checks if the service is running
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (MyService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateContext(Context context) {    //call this when any new activity is started
@@ -125,7 +140,6 @@ public class MyApplication extends Application {
 
                 //change notification to show the loading icon
                 mBuilder.mActions.clear();  //remove the play icon
-                mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp); // set small icon to notify that radio is playing
                 mBuilder.addAction(R.drawable.ic_loading_white_24dp, "", pendingIntentCancel).build();  //change icon to the loading icon
                 manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());    //show notification
             }
@@ -174,7 +188,6 @@ public class MyApplication extends Application {
             initializeMediaPlayer();
             //change notification action to play button
             mBuilder.mActions.clear();
-            mBuilder.setSmallIcon(R.drawable.ic_stop_white_24dp); // set small icon to notify that player is stopped
             mBuilder.addAction(R.drawable.ic_play_arrow_white_24dp, "", pendingIntentCancel).build();
             manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());
         }
@@ -198,25 +211,24 @@ public class MyApplication extends Application {
         return song_name;
     }
 
-    // Add an accessor method for setting the volume of the media player
+    /*// Add an accessor method for setting the volume of the media player
     public void setVolume(int value) {
         // setVolume takes a fraction between 0 and 1, and input is out of 100, so need to convert
         float convertedSliderVal = ((float) value) / 100;
         // setVolume takes a left value and a right value, I believe that this pans the sound between speakers sort of like stereo sound. Can anyone confirm? --Evan
         player.setVolume(convertedSliderVal, convertedSliderVal);
     }
-
+*/
     public boolean isPlaying() {
         return player.isPlaying();
     }
 
-    public void createNotification(final String artist, final String title, final Bitmap art) {   //does the initial creation of the notification
-        resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
-        recieverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
 
-        ServiceConnection serviceConnection = new ServiceConnection() {
+    public void createNotification(final String artist, final String title, final Bitmap art) {   //does the initial creation of the notification
+
+        ServiceConnection serviceConnection = new ServiceConnection() {     //connects to the KillNotificationService which kills notification when app is swiped away in multitasking menu
             @Override
-            public void onServiceConnected(ComponentName name, IBinder binder) {
+            public void onServiceConnected(ComponentName name, IBinder binder) {    //when that service has started, we can create the notification
                 ((KillNotificationsService.KillBinder) binder).service.startService(new Intent(
                         context, KillNotificationsService.class));
                 resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
@@ -228,7 +240,7 @@ public class MyApplication extends Application {
 
                 Log.d("Service", "builder");
                 mBuilder = new NotificationCompat.Builder(context);    //build notification
-                mBuilder.setSmallIcon(R.drawable.ic_stop_white_24dp)
+                mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
                         .setLargeIcon(art)
                         .setContentTitle("WTBU")
                         .setContentText(artist)
@@ -240,7 +252,7 @@ public class MyApplication extends Application {
                         .setContentIntent(resultPendingIntent)                                      //when the main part of notification is clicked
                         .build();
                 manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());                                                //show notification
+                manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());         //show notification
 
             }
 
@@ -250,7 +262,7 @@ public class MyApplication extends Application {
             }
         };
 
-        bindService(new Intent(context, KillNotificationsService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        bindService(new Intent(context, KillNotificationsService.class), serviceConnection, Context.BIND_AUTO_CREATE);  //bind service
 
     }
 
@@ -263,43 +275,43 @@ public class MyApplication extends Application {
         manager.notify(KillNotificationsService.NOTIFICATION_ID, mBuilder.build());
     }
 
-    public void setup_prefs() {
-        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
-        SharedPreferences.Editor editor = favorites.edit();
-        for (int day=0; day<7; day++)
+    public void loadPrefs() {   //loads user's favorites from memory
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);     //get FavoritesFile
+
+        for (int day=0; day<7; day++)   //sunday = 0, saturday = 6
         {
-            for (int time = 0; time < 10; time++)
+            for (int time = 0; time < 10; time++)   //0 = 6AM, 9 = 12AM on intervals of 2 hours
             {
-                editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false); // ex: 2 4 means Tuesday 2PM since the 2PM show is the fourth one
+                boolean fav = favorites.getBoolean(Integer.toString(day) + " " + Integer.toString(time), false);    //get whether or not that show is a favorite
+                userFavorites[day][time] = fav;     //add it to the userFavorites array
+                Log.d(Integer.toString(day) + " " + Integer.toString(time), Boolean.toString(fav));
             }
         }
-        // Commit the edits!
-        editor.apply();
     }
 
 
-    public void add_favorite(int day, int time) {
-        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
+    public void addFavorite(int day, int time) {    //called when the user stars a new show
+        Log.d("Favorite", "Added");
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);     //get FavoritesFile
         SharedPreferences.Editor editor = favorites.edit();
 
-        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), true);
-        editor.apply();
+        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), true);  //set that day and time in the file to true
+        editor.apply();     //apply change
+
+        userFavorites[day][time] = true;        //set favorite in the userFavorites array
     }
 
-    public void remove_favorite(int day, int time) {
-        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);
+    public void removeFavorite(int day, int time) {     //called when the user un-stars a show
+        SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);     //get FavoritesFile
         SharedPreferences.Editor editor = favorites.edit();
 
-        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false);
-        editor.apply();
+        editor.putBoolean(Integer.toString(day) + " " + Integer.toString(time), false);     //set that day and time in the file to false
+        editor.apply();     //apply change
+
+        userFavorites[day][time] = false;       //set to not a favorite in the userFavorites array
     }
 
-    public boolean check_favorite(int day, int time) {
-        return usrFavorites[day][time];
+    public boolean checkFavorite(int day, int time) {   //checks if a show was starred by the user
+        return userFavorites[day][time];
     }
-
-    public void removeNotification() {
-        manager.cancelAll();
-    }
-
 }

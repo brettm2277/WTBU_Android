@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
 
-    private AudioManager audioManager;  //allows for changing the volume
+    //private AudioManager audioManager;  //allows for changing the volume
 
     public TextView textView_artist_name;
     public TextView textView_song_name;
@@ -85,6 +84,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
 
+
+
+
+
         initializeUI();                 //initializes the features of the buttons and volume slider
 
         ((MyApplication) this.getApplication()).updateContext(MainActivity.this);
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity
 
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
+
+
 
     // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
     private void initializeUI() {
@@ -116,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             buttonPause.setVisibility(View.INVISIBLE);
         }
 
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
+        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
 
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
@@ -167,6 +172,7 @@ public class MainActivity extends AppCompatActivity
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);       //add the request to the queue
+
     }
 
     private void getSongArtLength(final Song song)        //uses the free iTunes api to get album artwork url

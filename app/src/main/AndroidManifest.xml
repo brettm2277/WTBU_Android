@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MyApplication"
@@ -44,6 +45,26 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".KillNotificationsService" />
+
+        <service android:name=".MyService">
+            <intent-filter>
+                <action android:name="your.package.MyService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:process=":remote" android:name="AlarmReceiver"></receiver>
+
+
     </application>
 
 </manifest>
