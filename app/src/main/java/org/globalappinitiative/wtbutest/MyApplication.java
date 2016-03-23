@@ -299,6 +299,12 @@ public class  MyApplication extends Application {
         editor.apply();     //apply change
 
         userFavorites[day][time] = true;        //set favorite in the userFavorites array
+
+        if (isMyServiceRunning()){     //check if the service is on that notifies you when your favorite show is on
+            Intent serviceIntent = new Intent(this, MyService.class);
+            MyApplication.this.stopService(serviceIntent);
+            MyApplication.this.startService(serviceIntent);
+        }
     }
 
     public void removeFavorite(int day, int time) {     //called when the user un-stars a show
@@ -309,6 +315,12 @@ public class  MyApplication extends Application {
         editor.apply();     //apply change
 
         userFavorites[day][time] = false;       //set to not a favorite in the userFavorites array
+
+        if (isMyServiceRunning()){     //check if the service is on that notifies you when your favorite show is on
+            Intent serviceIntent = new Intent(this, MyService.class);
+            MyApplication.this.stopService(serviceIntent);
+            MyApplication.this.startService(serviceIntent);
+        }
     }
 
     public boolean checkFavorite(int day, int time) {   //checks if a show was starred by the user
