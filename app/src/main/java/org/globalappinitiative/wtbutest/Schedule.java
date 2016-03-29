@@ -278,7 +278,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         linearLayouts[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -292,6 +292,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     //created by navigation drawer template. we can change it later for whatever we put in it
     @SuppressWarnings("StatementWithEmptyBody")

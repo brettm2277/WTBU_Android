@@ -12,7 +12,7 @@ public class BootReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Intent serviceIntent = new Intent("org.globalappinitiative.wtbutest.MyService");
+            Intent serviceIntent = new Intent(context, MyService.class);
             context.startService(serviceIntent);
         }
     }
