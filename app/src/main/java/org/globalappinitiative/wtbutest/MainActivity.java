@@ -175,9 +175,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void getSongArtLength(final Song song)        //uses the free iTunes api to get album artwork url
-    {
-        String artist_and_title = song.getArtist() + " " + song.getTitle();
+    private void getSongArtLength(final Song song, final String artist_and_title) {
         String url = "https://itunes.apple.com/search?term=" + artist_and_title.replaceAll(" ", "+");   //add artist and title to url
         Log.d("URL", url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,        //use volley to make a string request
@@ -186,15 +184,26 @@ public class MainActivity extends AppCompatActivity
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);           //iTunes api gives data back in json format, this parses it
-                            JSONArray results = jsonObject.getJSONArray("results");
-                            JSONObject res = results.getJSONObject(0);
-                            String artwork_url = res.getString("artworkUrl100");
-                            int index = artwork_url.indexOf("100x100bb.jpg");
-                            artwork_url = artwork_url.substring(0, index) + "1200x1200bb.jpg";        //artwork_url contains image of album artwork
-                            Log.d("Artwork URL", artwork_url);
-                            getAlbumArt(artwork_url);                                 //need to make another request using volley to actually get the image
-                            int song_length = res.getInt("trackTimeMillis");          // gets length of song from API
-                            song.setTrackLength(song_length);                         // set the length of the song
+                            int numOfResults = jsonObject.getInt("resultCount");
+                            if (numOfResults > 0) {
+                                JSONArray results = jsonObject.getJSONArray("results");
+                                JSONObject res = results.getJSONObject(0);
+                                String artwork_url = res.getString("artworkUrl100");
+                                int index = artwork_url.indexOf("100x100bb.jpg");
+                                artwork_url = artwork_url.substring(0, index) + "1200x1200bb.jpg";        //artwork_url contains image of album artwork
+                                Log.d("Artwork URL", artwork_url);
+                                getAlbumArt(artwork_url);                                 //need to make another request using volley to actually get the image
+                                int song_length = res.getInt("trackTimeMillis");          // gets length of song from API
+                                song.setTrackLength(song_length);                         // set the length of the song
+                            } else {
+                                String removeLastWord = artist_and_title.substring(0, artist_and_title.lastIndexOf(" "));
+                                if (!removeLastWord.isEmpty()) {
+                                    getSongArtLength(song, removeLastWord);
+                                } else {
+                                    album_art.setImageResource(R.drawable.cover_art_android);
+                                }
+                            }
+
                         } catch (JSONException e) {
                             Log.e("JSON error", e.toString());
                             e.printStackTrace();
@@ -207,6 +216,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
         queue.add(stringRequest);       //add the request to the queue
+    }
+
+    private void getSongArtLength(final Song song)        //uses the free iTunes api to get album artwork url
+    {
+        String artist_and_title = song.getArtist() + " " + song.getTitle();
+        getSongArtLength(song, artist_and_title);
     }
 
     private void getAlbumArt(String url)    //make request using volley to actually download the album art
