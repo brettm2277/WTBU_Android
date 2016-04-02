@@ -31,7 +31,7 @@ public class  MyApplication extends Application {
     private Context context;
 
     private Intent resultIntent;
-    private Intent recieverIntent;
+    private Intent receiverIntent;
 
     private String artist_name;
     private String song_name;
@@ -232,11 +232,11 @@ public class  MyApplication extends Application {
                 ((KillNotificationsService.KillBinder) binder).service.startService(new Intent(
                         context, KillNotificationsService.class));
                 resultIntent = new Intent(context, MainActivity.class);             //starts MainActivity
-                recieverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
+                receiverIntent = new Intent(context, NotificationReceiver.class);   //starts NotificationReceiver which detects when the action to play/stop is clicked
 
                 //pending intents used for the notification
                 resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                pendingIntentCancel = PendingIntent.getBroadcast(context, 0, recieverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntentCancel = PendingIntent.getBroadcast(context, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Log.d("Service", "builder");
                 mBuilder = new NotificationCompat.Builder(context);    //build notification
