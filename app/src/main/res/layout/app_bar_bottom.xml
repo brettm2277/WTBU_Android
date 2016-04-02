@@ -42,13 +42,15 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Song Name"
+            android:maxLines = "2"
+            android:scrollbars = "vertical"
             android:id="@+id/textView_song_name"
-            android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/textView_artist_name"
-            android:layout_alignStart="@+id/textView_artist_name"
+            android:gravity="center"
+            android:layout_below="@+id/textView_artist_name"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:gravity="center"/>
+            android:layout_toRightOf="@+id/buttonPlay"
+            android:layout_toEndOf="@+id/buttonPlay"/>
 
     </RelativeLayout>
 </android.support.design.widget.AppBarLayout>
