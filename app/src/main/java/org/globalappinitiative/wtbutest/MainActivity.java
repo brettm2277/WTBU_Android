@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity
 
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
+        textView_song_name.setMovementMethod(new ScrollingMovementMethod()); // Allows this to scroll if song name too long
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
 
@@ -220,7 +222,8 @@ public class MainActivity extends AppCompatActivity
 
     private void getSongArtLength(final Song song)        //uses the free iTunes api to get album artwork url
     {
-        String artist_and_title = song.getArtist() + " " + song.getTitle();
+        String artist_and_title = song.getArtist().replaceAll("&", "and") + " " + song.getTitle();
+        // ampersands cause issue with search API so they are replaced
         getSongArtLength(song, artist_and_title);
     }
 
