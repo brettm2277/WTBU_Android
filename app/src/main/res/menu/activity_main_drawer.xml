@@ -10,6 +10,11 @@
             android:id="@+id/nav_schedule"
             android:icon="@drawable/ic_today_white_24dp"
             android:title="Schedule" />
+        <item
+            android:id="@+id/nav_donate"
+            android:icon="@drawable/ic_chat_white_24dp"
+            android:title="Donate" />
+
     </group>
 
     <item android:title="Communicate">

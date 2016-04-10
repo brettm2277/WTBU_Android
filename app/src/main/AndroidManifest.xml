@@ -35,6 +35,11 @@
             android:label="@string/title_activity_schedule"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DonateActivity"
+            android:label="@string/title_activity_donate"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".NotificationReceiver" />
 

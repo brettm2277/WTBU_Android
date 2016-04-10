@@ -213,8 +213,11 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_schedule) {
             Intent intent = new Intent(this, Schedule.class);
             startActivity(intent);
+        } else if (id == R.id.nav_donate) {
+            Intent intent = new Intent(this, DonateActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_chat) {
-
+            // do nothing
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

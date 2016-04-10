@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -195,6 +196,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
         textView_artist_name.setText(((MyApplication)getApplication()).getArtistName());
         textView_song_name.setText(((MyApplication) getApplication()).getSongName());
+        textView_song_name.setMovementMethod(new ScrollingMovementMethod()); // Allows this to scroll if song name too long
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
     }
@@ -307,6 +309,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         } else if (id == R.id.nav_schedule) {
             //do nothing
 
+        } else if (id == R.id.nav_donate) {
+            Intent intent = new Intent(this, DonateActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);

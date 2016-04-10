@@ -35,6 +35,7 @@ public class  MyApplication extends Application {
 
     private String artist_name;
     private String song_name;
+    final private String donate_url = "https://trusted.bu.edu/s/1759/2-bu/giving.aspx?sid=1759&gid=2&pgid=434&cid=1077&appealcode=WEBCOM"; // URL to link to a donation page
 
     private PendingIntent resultPendingIntent;
     private PendingIntent pendingIntentCancel;
@@ -49,7 +50,6 @@ public class  MyApplication extends Application {
     private boolean clicked_play = false;
 
     private boolean [][] userFavorites = new boolean[7][10];
-
 
     @Override
     public void onCreate() {
