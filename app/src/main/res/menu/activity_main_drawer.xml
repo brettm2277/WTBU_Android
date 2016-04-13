@@ -12,7 +12,7 @@
             android:title="Schedule" />
         <item
             android:id="@+id/nav_donate"
-            android:icon="@drawable/ic_chat_white_24dp"
+            android:icon="@drawable/ic_attach_money_white_24dp"
             android:title="Donate" />
 
     </group>
