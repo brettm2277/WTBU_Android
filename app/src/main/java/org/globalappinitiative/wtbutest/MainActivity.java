@@ -132,25 +132,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void getRSSData()
-    {
-        String url = "https://spinitron.com/radio/rss.php?station=wtbu";        //rss feed gives us list of recently played songs. need something more up to date
+    private void getRSSData() {
+        String url = "https://gaiwtbubackend.herokuapp.com/song?SongID=1234";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
 
-        // Request a string response from the provided URL.
+        // Request a string response from the provided URL
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,    //use volley to make request to get rss feed data
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        List<Song> songLog = new ArrayList<Song>();
-                        XMLParser parser = new XMLParser();
-                        songLog = parser.parse(response, songLog);
-                        String s = "";
-                        for (int i = songLog.size()-1; i >= 0; i--) {
-                            s = s + songLog.get(i).getArtist().replace("&amp;", "&") + "\n";
-                        }
-                        if (!songLog.get(songLog.size()-1).isSameSong(nowPlaying)) { // no need to get album information if song is the same
-                            nowPlaying = songLog.get(songLog.size() - 1);
+                        // Method in BackendQuery static, no need for singletons
+                        Song backendSong = BackendQuery.parseSong(response);
+                        if (!backendSong.isSameSong(nowPlaying) && backendSong != null) { // no need to get album information if song is the same or if the method returned a null reference
+                            nowPlaying = backendSong;
                             current_artist = nowPlaying.getArtist().replace("&amp;", "&").replace("(", "").replace(")", "");    //get most recent artist
                             current_title = nowPlaying.getTitle().replace("&amp;", "&").replace("(", "").replace(")", "");      //get most recent song
                             ((MyApplication) MainActivity.this.getApplication()).setArtistName(current_artist);
@@ -163,8 +156,6 @@ public class MainActivity extends AppCompatActivity
 
                             getSongArtLength(nowPlaying);                                            //get the url for the album artwork for this song
                         }
-                        //((MyApplication) MainActivity.this.getApplication()).updateNotificationInfo(current_artist, current_title, art);    //update notification with new album art, song/title
-
                     }
                 }, new Response.ErrorListener() {
             @Override
