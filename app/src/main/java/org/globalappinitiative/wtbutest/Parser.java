@@ -82,11 +82,10 @@ class Song {
 }
 
 class BackendQuery { // Changed from class Parser due to import issues
-    public static Song parseSong(String inputJSON) {
+    public static Song parseSong(JSONObject inputJSON) {
         final JSONObject obj;
         try {
-            obj = new JSONObject(inputJSON);
-            JSONObject resultsJSON = obj.getJSONObject("results");
+            JSONObject resultsJSON = inputJSON.getJSONObject("results");
             final String name = resultsJSON.getString("ArtistName");
             final String title = resultsJSON.getString("SongName");
             Song currentSong = new Song(name, title);

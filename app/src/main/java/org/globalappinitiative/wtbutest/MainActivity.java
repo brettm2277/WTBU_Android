@@ -26,6 +26,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -132,15 +133,15 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
     private void getRSSData() {
         String url = "https://gaiwtbubackend.herokuapp.com/song?SongID=1234";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
 
-        // Request a string response from the provided URL
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,    //use volley to make request to get rss feed data
-                new Response.Listener<String>() {
+        queue.add(new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        // Method in BackendQuery static, no need for singletons
+                    public void onResponse(JSONObject response) {
                         Song backendSong = BackendQuery.parseSong(response);
                         if (!backendSong.isSameSong(nowPlaying) && backendSong != null) { // no need to get album information if song is the same or if the method returned a null reference
                             nowPlaying = backendSong;
@@ -157,15 +158,13 @@ public class MainActivity extends AppCompatActivity
                             getSongArtLength(nowPlaying);                                            //get the url for the album artwork for this song
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("VolleyError", error.toString());
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);       //add the request to the queue
-
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VolleyError", error.toString());
+                    }
+                }));
     }
 
     private void getSongArtLength(final Song song, final String artist_and_title) {
