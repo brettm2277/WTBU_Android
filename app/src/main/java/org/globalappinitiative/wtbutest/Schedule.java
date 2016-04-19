@@ -43,12 +43,22 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -117,7 +127,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
         initializeUI();
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
-        new JsoupAsyncTask().execute();
+        new ScheduleAsyncTask().execute();
 
     }
 
@@ -400,7 +410,54 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    private class JsoupAsyncTask extends AsyncTask<Void, Void, Void> { // Reads the schedule data
+    // Class for getting JSON data from a url
+    public class JsonParser {
+        public String TAG = "JsonParser.java";
+        public InputStream inputStream = null;
+        public JSONObject jObj = null;
+        public String json = "";
+
+        public JSONObject getJSONFromUrl(String urlSource) {
+            //make HTTP request
+            try {
+                URL url = new URL(urlSource);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setChunkedStreamingMode(0);
+                inputStream = new BufferedInputStream(urlConnection.getInputStream());
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Read JSON data from inputStream
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                inputStream.close();
+                json = sb.toString();
+            } catch (Exception e) {
+                Log.e(TAG, "Error converting result " + e.toString());
+            }
+
+            // try parse the string to a JSON object
+            try {
+                jObj = new JSONObject(json);
+            } catch (JSONException e) {
+                Log.e(TAG, "Error parsing data " + e.toString());
+            }
+
+            return jObj;// return JSON String
+        }
+    }
+
+
+    private class ScheduleAsyncTask extends AsyncTask<Void, Void, Void> { // Reads the schedule data
 
         @Override
         protected void onPreExecute() {
@@ -410,30 +467,31 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                htmlDocument = Jsoup.connect(htmlPageUrl).get(); // Connect to WTBU
-                Element table = htmlDocument.select("table").get(0); // select the schedule table
-                Elements rows = table.select("tr");
-                for (int i=1; i < rows.size(); i++) {
-                    Element tableRow = rows.get(i);
-                    Elements cols = tableRow.select("td");
-                    String showTime = cols.get(0).text();
-                    for (int j=1; j < cols.size(); j++) { // Iterate over the td elements
-                        Element link = cols.get(j).select("a").first();
-                        if (link != null) {
-                            String relHref = link.attr("href");
-                            Pattern weekdayPattern = Pattern.compile("(sun|mon|tues|wednes|thurs|fri|satur)day");
-                            Matcher matcher = weekdayPattern.matcher(relHref);
-                            if (matcher.find()) {
-                                String showDay = matcher.group(0); // Capitalize the first letter
-                                String showName = cols.get(j).text();
-                                ScheduleItem program = new ScheduleItem(showDay, relHref, showTime, showName);
-                                allPrograms.get(program.getDayOfWeek()).add(program);
-                            }
-                        }
+                String url = "https://gaiwtbubackend.herokuapp.com/regularShowsInfo?SongID=1234";
+                // Call method from JsonParser to get the JSON from the specified url
+                JsonParser jsparser = new JsonParser();
+                JSONObject scheduleJSON = jsparser.getJSONFromUrl(url);
+                // Now get the results array from the schedule JSON
+                JSONArray resultsJSON = scheduleJSON.getJSONArray("results");
+                // For each in results...
+                for (int i = 0; i < resultsJSON.length(); i++) {
+                    // Get the result at the current index and store it locally
+                    JSONObject workingSet = resultsJSON.getJSONObject(i);
+                    // Determine which days the show plays on
+                    JSONArray airDates = workingSet.getJSONArray("Weekdays");
+                    // Get the snow name
+                    String showName = workingSet.getString("ShowName");
+                    // Get the show time
+                    String showTime = workingSet.getString("OnairTime");
+                    // Now we need to create a schedule item for each occurrence of the show
+                    for (int j = 0; j < airDates.length(); j++) {
+                        // Create a new ScheduleItem
+                        ScheduleItem program = new ScheduleItem(airDates.getString(j), showTime, showName);
+                        // Add it to the list of programs
+                        allPrograms.get(program.getDayOfWeek()).add(program);
                     }
                 }
-
-            } catch (IOException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
             return null;

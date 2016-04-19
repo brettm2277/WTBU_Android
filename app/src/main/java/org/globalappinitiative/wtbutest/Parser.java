@@ -1,5 +1,10 @@
 package org.globalappinitiative.wtbutest;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -76,39 +81,18 @@ class Song {
     }
 }
 
-class XMLParser { // Changed from class Parser due to import issues
-    public List<Song> parse(String inputXML, List<Song> songLog) {
-		Document songList = Jsoup.parse(inputXML, "UTF-8", Parser.xmlParser());         boolean hasSeenTitle = false;	// The RSS feed xml has one instance of '<title>' before the ones preceding actual song info
-        if (songLog.isEmpty()) {		// If the song log is completely empty, we need to get all of the song history
-										/* NOTE: parsing the XML from top to bottom reads the songs into the list in reverse order, so
-										 we'll need to reverse the list at the end (only the first time though, after that just add new
-										 songs to the end fo the list */
-            Elements songItems = songList.select("item");
-            for (Element song : songItems) {
-                Element title = song.select("title").first();
-                String artistAndTitle = title.text();
-                String[] split = artistAndTitle.split(": ");
-                String artistName = split[0];
-                String songTitle = split[1].substring(1, split[1].length() - 1);
-                Song tempSong = new Song(songTitle, artistName); //  Declare a song, assign the parsed values to it, and add it to the songLog list
-                try { // If publish date available, provide start time as well
-                    Element pubDate = song.select("pubDate").first();
-                    String timeStart = pubDate.text();
-                    SimpleDateFormat f = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z");
-                    Date d = f.parse(timeStart);
-                    long songStart = d.getTime();
-                    tempSong.setStart(songStart);		// Set the start of the song
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                if (songLog.isEmpty() || !tempSong.isSameSong(songLog.get(songLog.size() - 1))) {
-                    songLog.add(tempSong);
-                }
-            }
-            // Reading from beginning to end puts elements into the arraylist in reverse order, so flip it
-            Collections.reverse(songLog);
+class BackendQuery { // Changed from class Parser due to import issues
+    public static Song parseSong(JSONObject inputJSON) {
+        final JSONObject obj;
+        try {
+            JSONObject resultsJSON = inputJSON.getJSONObject("results");
+            final String name = resultsJSON.getString("ArtistName");
+            final String title = resultsJSON.getString("SongName");
+            Song currentSong = new Song(name, title);
+            return currentSong;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return songLog;
+        return null;
     }
 }
-

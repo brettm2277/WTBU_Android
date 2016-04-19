@@ -10,33 +10,32 @@ public class ScheduleItem {
     private String showTime; // Time of the show
     private String title;    // Title of the show
 
-    public ScheduleItem(String weekday, String url, String showTime, String title) {
+    public ScheduleItem(String weekday, String showTime, String title) {
         switch(weekday.toLowerCase()) {
-            case "sunday":
-                dayOfWeek=0;
+            case "Sun":
+                dayOfWeek = 0;
                 break;
-            case "monday":
+            case "Mon":
                 dayOfWeek = 1;
                 break;
-            case "tuesday":
+            case "Tue":
                 dayOfWeek = 2;
                 break;
-            case "wednesday":
+            case "Wed":
                 dayOfWeek = 3;
                 break;
-            case "thursday":
+            case "Thu":
                 dayOfWeek = 4;
                 break;
-            case "friday":
+            case "Fri":
                 dayOfWeek = 5;
                 break;
-            case "saturday":
+            case "Sat":
                 dayOfWeek = 6;
                 break;
             default:
                 dayOfWeek = -1;
         }
-        this.url = url;
         this.showTime = showTime;
         this.title = title;
     }
