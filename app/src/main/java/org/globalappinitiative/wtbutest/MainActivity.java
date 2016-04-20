@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView album_art;
 
-    RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
+    public RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
 
     Handler handler = new Handler();    //used with the auto refresh runnable
 
@@ -124,6 +124,10 @@ public class MainActivity extends AppCompatActivity
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
 
+    }
+
+    public RequestQueue getRequestQueue() {
+        return queue;
     }
 
     private void getSongInfo() {

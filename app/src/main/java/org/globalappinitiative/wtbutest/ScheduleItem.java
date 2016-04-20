@@ -3,15 +3,14 @@ package org.globalappinitiative.wtbutest;
 /**
  * Created by Edward on 2/22/2016.
  */
-public class ScheduleItem {
+public class ScheduleItem implements Comparable<ScheduleItem> {
 
     private int dayOfWeek;   // Day of the week converted to string
-    private String url;      // URL of the string
-    private String showTime; // Time of the show
+    private int showTime; // Time of the show
     private String title;    // Title of the show
 
-    public ScheduleItem(String weekday, String showTime, String title) {
-        switch(weekday.toLowerCase()) {
+    public ScheduleItem(String weekday, int showTime, String title) {
+        switch(weekday) {
             case "Sun":
                 dayOfWeek = 0;
                 break;
@@ -46,5 +45,19 @@ public class ScheduleItem {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getShowTime() {
+        return showTime;
+    }
+
+    @Override
+    public int compareTo(ScheduleItem other) {
+        return this.getShowTime() - other.getShowTime();
+    }
+
+    @Override
+    public int hashCode() {
+        return showTime;
     }
 }

@@ -8,504 +8,142 @@
     tools:context="org.globalappinitiative.wtbutest.Schedule"
     android:background="@color/contentBkgColor">
 
+    <!-- All layouts get filled with scheduled programmes via code in Schedule.java -->
+    <!-- MONDAY -->
     <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/control_bar"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/MondaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/MondaysChildLayout"
             android:orientation="vertical"
-            android:paddingLeft="18dp"
-            android:background="@color/contentBkgColor">
-
-            <RelativeLayout
-                android:id="@+id/rl1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="6 AM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block1"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program1"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star1" />
-
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="8 AM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block2"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program2"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <ImageView
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star2" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="10 AM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block3"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program3"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star3" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="12 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:id="@+id/block4"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program4"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star4" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl5"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="2 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block5"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program5"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star5" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl6"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="4 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block6"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program6"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star6" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl7"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="6 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block7"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program7"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star7" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl8"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="8 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block8"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program8"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star8" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl9"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="10 PM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block9"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program9"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star9" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/rl10"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
-
-                <TextView
-                    android:id="@+id/time10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:text="12 AM"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="#b9b8d2" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="85dp"
-                    android:paddingRight="20dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/block10"
-                        android:background="@drawable/grey_square">
-                        <TextView
-                            android:id="@+id/textView_program10"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:paddingLeft="20dp"
-                            android:text="\n \n"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                            android:textColor="@android:color/white" />
-                        <View
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="5dp"
-                            android:layout_weight="0"
-                            android:background="@drawable/star_empty"
-                            android:id="@+id/star10" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </RelativeLayout>
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- TUESDAY -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/TuesdaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
 
-    <include layout="@layout/app_bar_bottom" />
+        <LinearLayout
+            android:id="@+id/TuesdaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Wednesday -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/WednesdaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
+
+        <LinearLayout
+            android:id="@+id/WednesdaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Thursday -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/ThursdaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
+
+        <!-- Bowie anyone? -->
+        <LinearLayout
+            android:id="@+id/ThursdaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- FRIDAY -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/FridaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
+
+        <LinearLayout
+            android:id="@+id/FridaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Saturday -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/SaturdaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
+
+        <LinearLayout
+            android:id="@+id/SaturdaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- SUNDAY -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/SundaySchedule"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/include">
+
+        <LinearLayout
+            android:id="@+id/SundaysChildLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="60dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/app_bar_bottom"
+        android:id="@+id/include" />
 
 </RelativeLayout>

@@ -76,7 +76,6 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
 
-
         initializeUI();
         ((MyApplication) this.getApplication()).updateContext(Chat.this);
     }
