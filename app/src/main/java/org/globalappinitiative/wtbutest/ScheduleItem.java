@@ -3,40 +3,38 @@ package org.globalappinitiative.wtbutest;
 /**
  * Created by Edward on 2/22/2016.
  */
-public class ScheduleItem {
+public class ScheduleItem implements Comparable<ScheduleItem> {
 
     private int dayOfWeek;   // Day of the week converted to string
-    private String url;      // URL of the string
-    private String showTime; // Time of the show
+    private int showTime; // Time of the show
     private String title;    // Title of the show
 
-    public ScheduleItem(String weekday, String url, String showTime, String title) {
-        switch(weekday.toLowerCase()) {
-            case "sunday":
-                dayOfWeek=0;
+    public ScheduleItem(String weekday, int showTime, String title) {
+        switch(weekday) {
+            case "Sun":
+                dayOfWeek = 0;
                 break;
-            case "monday":
+            case "Mon":
                 dayOfWeek = 1;
                 break;
-            case "tuesday":
+            case "Tue":
                 dayOfWeek = 2;
                 break;
-            case "wednesday":
+            case "Wed":
                 dayOfWeek = 3;
                 break;
-            case "thursday":
+            case "Thu":
                 dayOfWeek = 4;
                 break;
-            case "friday":
+            case "Fri":
                 dayOfWeek = 5;
                 break;
-            case "saturday":
+            case "Sat":
                 dayOfWeek = 6;
                 break;
             default:
                 dayOfWeek = -1;
         }
-        this.url = url;
         this.showTime = showTime;
         this.title = title;
     }
@@ -47,5 +45,19 @@ public class ScheduleItem {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getShowTime() {
+        return showTime;
+    }
+
+    @Override
+    public int compareTo(ScheduleItem other) {
+        return this.getShowTime() - other.getShowTime();
+    }
+
+    @Override
+    public int hashCode() {
+        return showTime;
     }
 }
