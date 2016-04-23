@@ -81,7 +81,7 @@ import java.util.regex.Pattern;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Schedule extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
+public class Schedule extends AppCompatActivity {
 
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
@@ -99,9 +99,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private ScrollView[] scrollViews;
     private LinearLayout[] linearLayouts;
 
-    private ScheduleItem[][] schedule;
-
-    private View[][] starButtons;
+    private List<ScheduleItem>[] schedule;
 
     private boolean first_time = true;
 
@@ -135,30 +133,12 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
-        schedule = new ScheduleItem[7][24];
-        starButtons = new View[7][24];
-        // Begin with all items as null
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 24; j++) {
-                schedule[i][j] = null;
-                starButtons[i][j] = null;
-            }
-        }
+
         initializeUI();
 
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
         getSchedule();
-
-        // Now that all the star buttons have been initialized we can set their onClickListeners
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 24; j++) {
-                if (starButtons[i][j] != null)
-                    starButtons[i][j].setOnClickListener(this);
-            }
-        }
     }
 
     protected void initializeUI() {
@@ -310,59 +290,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                     String weekday = weekdays.getString(j);
                                     // Now finally construct the ScheduleItem from the parsed data
                                     ScheduleItem program = new ScheduleItem(weekday, showTime, showName);
-                                    schedule[program.getDayOfWeek()][showTime] = program;
+                                    ///// TODO schedule[program.getDayOfWeek()][showTime] = program;
                                 }
                             }
-                            // Now create UI elements in the xml layout for each schedule item parsed out of the JSON
-                            for (int i = 0; i < 7; i++)
-                                for (int j = 0; j < 24; j++)
-                                    if (schedule[i][j] != null) {
-                                        // Create a new textView to insert into the xml sheet for the schedule
-                                        TextView bubbleText = new TextView(getApplicationContext());
-                                        // Relative layout to put the text bubble and message bubble into
-                                        RelativeLayout scheduleBubble = new RelativeLayout(getApplicationContext());
-                                        // Create a button to insert into the linearLayout (the button is really just a View)
-                                        View starButton = new View(getApplicationContext());
-                                        // Also store an object reference to the star button locally because it would be a pain to get it by id later since they're created dynamically within a loop
-                                        starButtons[i][j] = starButton;
-                                        // Set the layout orientation and gravity
-                                        //scheduleBubble.setOrientation(LinearLayout.HORIZONTAL);
-                                        scheduleBubble.setGravity(Gravity.CENTER_VERTICAL);
-                                        // Get the text from the array of schedule items and use it to set the text in the newly created TextView
-                                        bubbleText.setText(schedule[i][j].getTitle());
-                                        // Set the color to white
-                                        bubbleText.setTextColor(Color.parseColor("#FFFFFF"));
-                                        // Set the background resource for the TextView
-                                        scheduleBubble.setBackgroundResource(R.drawable.grey_square);
-                                        // Set the margins
-                                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
-                                        params.setMargins(10, 30, 10, 30);
-                                        scheduleBubble.setLayoutParams(params);
-                                        // Now to set the height...
-                                        // Android doesn't actually interpret values in terms of dp or sp, but pixels. To get dp:
-                                        float scale = getApplicationContext().getResources().getDisplayMetrics().density;
-                                        params.height = (int) (60 * scale + 0.5f);
-                                        // Set the font size
-                                        bubbleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                                        // Set the TextView layout params
-                                        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.FILL_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
-                                        params1.addRule(RelativeLayout.LEFT_OF, starButton.getId());
-                                        params1.setMargins(30, 0, 0, 0);
-                                        bubbleText.setLayoutParams(params1);
-                                        // Add the TextView to the LinearLayout
-                                        scheduleBubble.addView(bubbleText);
-                                        starButton.setBackgroundResource(R.drawable.star_empty);
-                                        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT));
-                                        params2.width = (int) (35 * scale + 0.5f);
-                                        params2.height = (int) (35 * scale + 0.5f);
-                                        params2.setMargins(10, 0, 15, 0);
-                                        params2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                                        starButton.setLayoutParams(params2);
-                                        // Add the star button to the horizontal layout
-                                        scheduleBubble.addView(starButton);
-                                        // Add the horizontal layout to the layout corresponding to the day of the program weekday
-                                        linearLayouts[i].addView(scheduleBubble);
-                                    }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -491,102 +421,4 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
 
 
-    // Class for getting JSON data from a url
-    public class JsonParser {
-        public String TAG = "JsonParser.java";
-        public InputStream inputStream = null;
-        public JSONObject jObj = null;
-        public String json = "";
-
-        public JSONObject getJSONFromUrl(String urlSource) {
-            //make HTTP request
-            try {
-                URL url = new URL(urlSource);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoOutput(true);
-                urlConnection.setChunkedStreamingMode(0);
-                inputStream = new BufferedInputStream(urlConnection.getInputStream());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //Read JSON data from inputStream
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                inputStream.close();
-                json = sb.toString();
-            } catch (Exception e) {
-                Log.e(TAG, "Error converting result " + e.toString());
-            }
-
-            // try parse the string to a JSON object
-            try {
-                jObj = new JSONObject(json);
-            } catch (JSONException e) {
-                Log.e(TAG, "Error parsing data " + e.toString());
-            }
-
-            return jObj;// return JSON String
-        }
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-        this.position = position;
-        // Hide all the scrollViews
-        for (int i = 0; i < 7; i++) {
-            scrollViews[i].setVisibility(View.INVISIBLE);
-        }
-        // Show the one that corresponds to the position (which for some reason does not begin at zero)
-        scrollViews[position].setVisibility(View.VISIBLE);
-        /*for (int i = 0; i < 10; i++) {
-            if (((MyApplication) this.getApplication()).checkFavorite(position, i)) {
-                starButtons[i].setBackgroundResource(R.drawable.star_full);
-            }
-
-            else {
-                starButtons[i].setBackgroundResource(R.drawable.star_empty);
-            }
-        }
-
-        if (first_time) {
-            first_time = false;
-            Log.d("Position", Integer.toString(position));
-            for (int i = 0; i < 7; i++) {
-                // There is not always a show at every hour of the day, so make sure the hashMap for the desired weekday actually contains an element associated with the input key
-                if (schedule[position][i] != null) {
-                    String title = "\n" + schedule[position][i].getTitle() + "\n";
-                    textView_Programs[i].setText(title);
-                }
-            }
-        }
-        else {
-            animate_fade();
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    animate_vertical();
-                    Log.d("Position", Integer.toString(position));
-                    for (int i = 0; i < 7; i++) {
-                        if (schedule[position][i] != null) {
-                            String title = "\n" + schedule[position][i].getTitle() + "\n";
-                            textView_Programs[i].setText(title);
-                        }
-                    }
-                }
-            }, 300);
-        }*/
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-    }
 }
