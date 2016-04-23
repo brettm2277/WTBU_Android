@@ -8,140 +8,61 @@
     tools:context="org.globalappinitiative.wtbutest.Schedule"
     android:background="@color/contentBkgColor">
 
-    <!-- All layouts get filled with scheduled programmes via code in Schedule.java -->
-    <!-- MONDAY -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/MondaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_monday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <LinearLayout
-            android:id="@+id/MondaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- TUESDAY -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/TuesdaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_tuesday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <LinearLayout
-            android:id="@+id/TuesdaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Wednesday -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/WednesdaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_wednesday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <LinearLayout
-            android:id="@+id/WednesdaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Thursday -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/ThursdaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_thursday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <!-- Bowie anyone? -->
-        <LinearLayout
-            android:id="@+id/ThursdaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- FRIDAY -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/FridaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_friday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <LinearLayout
-            android:id="@+id/FridaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- Saturday -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/SaturdaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_saturday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
+        android:layout_above="@+id/include" />
 
-        <LinearLayout
-            android:id="@+id/SaturdaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
-
-    <!-- SUNDAY -->
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/SundaySchedule"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/day_list_sunday"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/include">
-
-        <LinearLayout
-            android:id="@+id/SundaysChildLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:paddingLeft="60dp"
-            android:paddingRight="10dp"
-            android:layout_height="match_parent">
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_above="@+id/include" />
 
     <include layout="@layout/app_bar_bottom"
         android:id="@+id/include" />

@@ -21,10 +21,12 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -34,8 +36,10 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -75,13 +79,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class Schedule extends AppCompatActivity {
+public class Schedule extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
@@ -91,15 +96,11 @@ public class Schedule extends AppCompatActivity {
 
     private AudioManager audioManager;  //allows for changing the volume
 
-    private Document htmlDocument;
-    private String htmlPageUrl = "http://www.wtburadio.org/programming/";
-
     private Spinner spinner;
 
-    private ScrollView[] scrollViews;
-    private LinearLayout[] linearLayouts;
+    private ListView[] lists;
 
-    private List<ScheduleItem>[] schedule;
+    private ArrayList<ArrayList<ScheduleItem>> schedule;
 
     private boolean first_time = true;
 
@@ -125,7 +126,6 @@ public class Schedule extends AppCompatActivity {
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
-
         //////////////////navigation drawer stuff//////////////////
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -133,41 +133,34 @@ public class Schedule extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
 
         initializeUI();
 
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
         getSchedule();
+        for (int i = 0; i < 7; i++) {
+            lists[i].setAdapter(new customListAdapter(this, schedule.get(i)));
+        }
     }
 
     protected void initializeUI() {
+        schedule = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            ArrayList<ScheduleItem> innerList = new ArrayList<ScheduleItem>();
+            schedule.add(innerList);
+        }
 
-        scrollViews = new ScrollView[7];
-        scrollViews[0] = (ScrollView) findViewById(R.id.SundaySchedule);
-        scrollViews[1] = (ScrollView) findViewById(R.id.MondaySchedule);
-        scrollViews[1].setVisibility(View.INVISIBLE);
-        scrollViews[2] = (ScrollView) findViewById(R.id.TuesdaySchedule);
-        scrollViews[2].setVisibility(View.INVISIBLE);
-        scrollViews[3] = (ScrollView) findViewById(R.id.WednesdaySchedule);
-        scrollViews[3].setVisibility(View.INVISIBLE);
-        scrollViews[4] = (ScrollView) findViewById(R.id.ThursdaySchedule);
-        scrollViews[4].setVisibility(View.INVISIBLE);
-        scrollViews[5] = (ScrollView) findViewById(R.id.FridaySchedule);
-        scrollViews[5].setVisibility(View.INVISIBLE);
-        scrollViews[6] = (ScrollView) findViewById(R.id.SaturdaySchedule);
-        scrollViews[6].setVisibility(View.INVISIBLE);
-
-        linearLayouts = new LinearLayout[7];
-        linearLayouts[0] = (LinearLayout) findViewById(R.id.SundaysChildLayout);
-        linearLayouts[1] = (LinearLayout) findViewById(R.id.MondaysChildLayout);
-        linearLayouts[2] = (LinearLayout) findViewById(R.id.TuesdaysChildLayout);
-        linearLayouts[3] = (LinearLayout) findViewById(R.id.WednesdaysChildLayout);
-        linearLayouts[4] = (LinearLayout) findViewById(R.id.ThursdaysChildLayout);
-        linearLayouts[5] = (LinearLayout) findViewById(R.id.FridaysChildLayout);
-        linearLayouts[6] = (LinearLayout) findViewById(R.id.SaturdaysChildLayout);
-
-        //animate_vertical(); <-- Call this later after knowing what day it is and populating the schedule...
+        lists = new ListView[7];
+        lists[0] = (ListView) findViewById(R.id.day_list_monday);
+        lists[1] = (ListView) findViewById(R.id.day_list_tuesday);
+        lists[2] = (ListView) findViewById(R.id.day_list_wednesday);
+        lists[3] = (ListView) findViewById(R.id.day_list_thursday);
+        lists[4] = (ListView) findViewById(R.id.day_list_friday);
+        lists[5] = (ListView) findViewById(R.id.day_list_saturday);
+        lists[6] = (ListView) findViewById(R.id.day_list_sunday);
 
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
@@ -175,20 +168,19 @@ public class Schedule extends AppCompatActivity {
         buttonPause = (ImageView) findViewById(R.id.buttonPause);
         buttonPause.setOnClickListener(this);
 
-        if (((MyApplication) this.getApplication()).isPlaying())
-        {
+        if (((MyApplication) this.getApplication()).isPlaying()) {
             buttonPlay.setVisibility(View.INVISIBLE);
             buttonPause.setVisibility(View.VISIBLE);
         }
-        else
-        {
+
+        else {
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
 
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
-        textView_artist_name.setText(((MyApplication)getApplication()).getArtistName());
+        textView_artist_name.setText(((MyApplication) getApplication()).getArtistName());
         textView_song_name.setText(((MyApplication) getApplication()).getSongName());
         textView_song_name.setMovementMethod(new ScrollingMovementMethod()); // Allows this to scroll if song name too long
 
@@ -221,30 +213,6 @@ public class Schedule extends AppCompatActivity {
         return true;
     }
 
-    public void animate_vertical() {
-        /*for (int i=0; i<10; i++)
-        {
-            TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 100, 0);   //from x, to x, from y, to y
-            translateAnimation.setDuration(500);
-            translateAnimation.setStartOffset(75 * i);
-            translateAnimation.setInterpolator(new DecelerateInterpolator());
-            relativeLayouts[i].startAnimation(translateAnimation);
-        }*/
-    }
-
-    public void animate_fade() {
-        /*for (int i=0; i<10; i++)
-        {
-            AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0.2f);   //animate from visible to transparent
-            alphaAnimation.setDuration(250);
-            alphaAnimation.setStartOffset(10 * i);
-            alphaAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
-            alphaAnimation.setFillAfter(true);
-
-            relativeLayouts[i].startAnimation(alphaAnimation);
-        }*/
-    }
-
     public void setupSpinner(Spinner spinner) {
         String[] items = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         //wrap the items in the Adapter
@@ -257,7 +225,7 @@ public class Schedule extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DAY_OF_WEEK);  //sunday = 1, saturday = 7
         int hour = c.get(Calendar.HOUR_OF_DAY);
-        setCurrentProgramRed(hour);
+        // TODO: setCurrentProgramRed(hour);
         Log.d("Hour", Integer.toString(hour));
         Log.d("Day", Integer.toString(day));
         spinner.setSelection(day - 1);
@@ -286,14 +254,16 @@ public class Schedule extends AppCompatActivity {
                                 JSONArray weekdays = result.getJSONArray("Weekdays");
                                 // Now for each entry in weekdays:
                                 for (int j = 0; j < weekdays.length(); j++) {
-                                    // Get the weekday out of the array
                                     String weekday = weekdays.getString(j);
                                     // Now finally construct the ScheduleItem from the parsed data
                                     ScheduleItem program = new ScheduleItem(weekday, showTime, showName);
-                                    ///// TODO schedule[program.getDayOfWeek()][showTime] = program;
+                                    schedule.get(program.getDayOfWeek()).add(program);
                                 }
                             }
-
+                            // Sort the shows for each day
+                            for (int i = 0; i < 7; i++) {
+                                Collections.sort(schedule.get(i));
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -305,17 +275,6 @@ public class Schedule extends AppCompatActivity {
                         Log.e("VolleyError", error.toString());
                     }
                 }));
-    }
-
-    public void setCurrentProgramRed(int hour) {
-        /*if (hour < 6) {
-            hour = 24;
-        }
-        else if (hour % 2 != 0) {
-            hour = hour - 1;
-        }
-        Log.d("New hour", Integer.toString(hour));
-        linearLayouts[hour/2-3].setBackgroundResource(R.drawable.red_square); // at 6 set 0th entry, at 8 set 1st entry, etc.*/
     }
 
     //created by navigation drawer template. we can change it later for whatever we put in it
@@ -356,69 +315,62 @@ public class Schedule extends AppCompatActivity {
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
-        /*
-        for (int i=0; i<10; i++) {
-            if (schedule[position][i] != null)
-            if (view == starButtons[i]) {
-                if (((MyApplication) this.getApplication()).checkFavorite(position, i)) {
-                    if (first_time_unfavorite) {
-                        first_time_unfavorite_index = i;
-                        first_time_unfavorite = false;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
-                        Log.d("this Position", Integer.toString(position));
-                        builder.setMessage("No longer get notified when " + schedule[position][i].getTitle() + " is on?")
-                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        ((MyApplication) Schedule.this.getApplication()).removeFavorite(position, first_time_unfavorite_index);
-                                        starButtons[first_time_unfavorite_index].setBackgroundResource(R.drawable.star_empty);
-                                    }
-                                })
-                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                });
-                        // Create the AlertDialog object and return it
-                        builder.create();
-                        builder.show();
+    }
 
-                    }
-                    else {
-                        ((MyApplication) this.getApplication()).removeFavorite(position, i);
-                        starButtons[i].setBackgroundResource(R.drawable.star_empty);
-                    }
-                }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+        this.position = position;
+        // Hide all the scrollViews
+        for (int i = 0; i < 7; i++) {
+            lists[i].setVisibility(View.INVISIBLE);
+        }
+        // Show the one that corresponds to the position (which for some reason does not begin at zero)
+        lists[position].setVisibility(View.VISIBLE);
+    }
 
-                else {
-                    if (first_time_favorite) {
-                        first_time_favorite_index = i;
-                        first_time_favorite = false;
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Schedule.this, 0x01030228);   //Theme_Material_Dialog_NoActionBar
-                        Log.d("this Position", Integer.toString(position));
-                        builder.setMessage("Get notified when " + schedule[position][i].getTitle() + " is on?")
-                                .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        ((MyApplication) Schedule.this.getApplication()).addFavorite(position, first_time_favorite_index);
-                                        starButtons[first_time_favorite_index].setBackgroundResource(R.drawable.star_full);
-                                    }
-                                })
-                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                    }
-                                });
-                        // Create the AlertDialog object and return it
-                        builder.create();
-                        builder.show();
-                    }
-                    else {
-                        ((MyApplication) this.getApplication()).addFavorite(position, i);
-                        starButtons[i].setBackgroundResource(R.drawable.star_full);
-                    }
-                }
-            }
-        }*/
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) { }
 
 
+    private class customListAdapter extends BaseAdapter {
+
+        private List<ScheduleItem> listElements;
+        private LayoutInflater inflater;
+
+        public customListAdapter(Context context, ArrayList<ScheduleItem> singleDaySchedule) {
+            this.listElements = singleDaySchedule;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
+        @Override
+        public int getCount() {
+            return listElements.size();
+        }
 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return listElements.get(position);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            int type = getItemViewType(position);
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.schedule_entry, parent, false);
+            }
+
+            ScheduleItem show = (ScheduleItem) getItem(position);
+            TextView hour = (TextView) convertView.findViewById(R.id.schedule_entry_hour);
+            TextView name = (TextView) convertView.findViewById(R.id.schedule_entry_text);
+            hour.setText(Integer.toString(show.getShowTime()));
+            name.setText(show.getTitle());
+
+            return convertView;
+        }
+    }
 }
