@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -143,7 +144,18 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         getSchedule();
         for (int i = 0; i < 7; i++) {
             lists[i].setAdapter(new customListAdapter(this, schedule.get(i)));
+            lists[i].setVisibility(View.INVISIBLE);
+            lists[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+                    //ScheduleItem listElement = (ScheduleItem) lists[ind].getItemAtPosition(position);
+                    ImageView starImage = (ImageView) v.findViewById(R.id.schedule_entry_star);
+                    starImage.setImageResource(R.drawable.star_full);   // TODO: this is just a test, they need to flip state with presses and record somewhere
+                }
+            });
         }
+
+        lists[0].setVisibility(View.VISIBLE);
     }
 
     protected void initializeUI() {
