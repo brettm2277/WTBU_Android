@@ -26,11 +26,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
+import org.globalappinitiative.wtbutest.request.RequestDelegate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -185,8 +181,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private void getSchedule() {
         String url = "https://gaiwtbubackend.herokuapp.com/regularShowsInfo?SongID=1234";
 
-        AppVolleyState.squickRequest(url, null,
-                new AppVolleyState.SquickRequestDelegate() {
+        AppVolleyState.sobjectRequest(url, null,
+                new RequestDelegate<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {

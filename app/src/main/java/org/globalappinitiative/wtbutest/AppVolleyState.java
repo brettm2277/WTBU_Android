@@ -8,6 +8,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import org.globalappinitiative.wtbutest.request.GetArrayRequest;
+import org.globalappinitiative.wtbutest.request.GetObjectRequest;
+import org.globalappinitiative.wtbutest.request.RequestDelegate;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -40,27 +44,22 @@ public class AppVolleyState {
         return requestQueue;
     }
 
-    public void quickRequest(String url, Map<String, String> params, SquickRequestDelegate delegate) {
-        requestQueue.add(new JSONGETRequest(url, params, delegate, delegate));
+    public void objectRequest(String url, Map<String, String> params, RequestDelegate<JSONObject> delegate) {
+        requestQueue.add(new GetObjectRequest(url, params, delegate, delegate));
     }
 
-    // Static class
-    public static abstract class SquickRequestDelegate implements Response.Listener<JSONObject>, Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("VolleyError", error.toString());
-        }
-
+    public void arrayRequest(String url, Map<String, String> params, RequestDelegate<JSONArray> delegate) {
+        requestQueue.add(new GetArrayRequest(url, params, delegate, delegate));
     }
 
     // Static aliases
 
-    public static RequestQueue sgetGetRequestQueue() {
-        return instance().getRequestQueue();
+    public static void sobjectRequest(String url, Map<String, String> params, RequestDelegate<JSONObject> delegate) {
+        instance().objectRequest(url, params, delegate);
     }
 
-    public static void squickRequest(String url, Map<String, String> params, SquickRequestDelegate delegate) {
-        instance().quickRequest(url, params, delegate);
+    public static void sarrayRequest(String url, Map<String, String> params, RequestDelegate<JSONArray> delegate) {
+        instance().arrayRequest(url, params, delegate);
     }
 
 }
