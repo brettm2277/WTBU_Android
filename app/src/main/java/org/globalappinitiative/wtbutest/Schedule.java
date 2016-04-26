@@ -46,6 +46,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     private AudioManager audioManager;  //allows for changing the volume
 
+    private int position;
+
     private Spinner spinner;
 
     private ListView[] lists;
@@ -59,7 +61,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        this.position = 0;
         setVolumeControlStream(AudioManager.STREAM_MUSIC);              //makes it so when user uses volume keys it raises the music volume, not ringer volume
 
         //////////////////navigation drawer stuff//////////////////
@@ -72,7 +74,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
-
         initializeUI();
 
         ((MyApplication) this.getApplication()).updateContext(Schedule.this);
@@ -80,12 +81,19 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         for (int i = 0; i < 7; i++) {
             lists[i].setAdapter(new customListAdapter(this, schedule.get(i)));
             lists[i].setVisibility(View.INVISIBLE);
+            final int ind = i;
             lists[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                    //ScheduleItem listElement = (ScheduleItem) lists[ind].getItemAtPosition(position);
                     ImageView starImage = (ImageView) v.findViewById(R.id.schedule_entry_star);
-                    starImage.setImageResource(R.drawable.star_full);   // TODO: this is just a test, they need to flip state with presses and record somewhere
+                    ScheduleItem listElement = (ScheduleItem) lists[ind].getItemAtPosition(position);
+                    if (((MyApplication) Schedule.this.getApplication()).checkFavorite(Schedule.this.position, listElement.getShowTime())) {
+                        ((MyApplication) Schedule.this.getApplication()).removeFavorite(Schedule.this.position, listElement.getShowTime());
+                        starImage.setImageResource(R.drawable.star_empty);
+                    } else {
+                        starImage.setImageResource(R.drawable.star_full);
+                        ((MyApplication) Schedule.this.getApplication()).addFavorite(Schedule.this.position, listElement.getShowTime());
+                    }
                 }
             });
         }
@@ -175,7 +183,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         Log.d("Hour", Integer.toString(hour));
         Log.d("Day", Integer.toString(day));
         spinner.setSelection(day - 1);
-
+        position = day - 1;
     }
 
     private void getSchedule() {
@@ -265,6 +273,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
         // Show the one that corresponds to the position (which for some reason does not begin at zero)
         lists[position].setVisibility(View.VISIBLE);
+        this.position = position;
     }
 
     @Override
@@ -308,6 +317,14 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             TextView name = (TextView) convertView.findViewById(R.id.schedule_entry_text);
             hour.setText(Integer.toString(show.getShowTime()));
             name.setText(show.getTitle());
+
+            ImageView starImage = (ImageView) convertView.findViewById(R.id.schedule_entry_star);
+
+            if (((MyApplication) Schedule.this.getApplication()).checkFavorite(Schedule.this.position, show.getShowTime())) {
+                starImage.setImageResource(R.drawable.star_full);
+            } else {
+                starImage.setImageResource(R.drawable.star_empty);
+            }
 
             return convertView;
         }
