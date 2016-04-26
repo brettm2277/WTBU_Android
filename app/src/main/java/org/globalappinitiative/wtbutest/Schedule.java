@@ -116,6 +116,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private int first_time_unfavorite_index;
 
     private int position;
+    private final int numOfItems = 24;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,11 +139,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         ///////////////////////////////////////////////////////////
-        schedule = new ScheduleItem[7][24];
-        starButtons = new View[7][24];
+        schedule = new ScheduleItem[7][numOfItems];
+        starButtons = new View[7][numOfItems];
         // Begin with all items as null
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 24; j++) {
+            for (int j = 0; j < numOfItems; j++) {
                 schedule[i][j] = null;
                 starButtons[i][j] = null;
             }
@@ -426,10 +427,10 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
-        /*
-        for (int i=0; i<10; i++) {
+
+        for (int i=0; i<numOfItems; i++) {
             if (schedule[position][i] != null)
-            if (view == starButtons[i]) {
+            if (view == starButtons[position][i]) {
                 if (((MyApplication) this.getApplication()).checkFavorite(position, i)) {
                     if (first_time_unfavorite) {
                         first_time_unfavorite_index = i;
@@ -440,7 +441,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         ((MyApplication) Schedule.this.getApplication()).removeFavorite(position, first_time_unfavorite_index);
-                                        starButtons[first_time_unfavorite_index].setBackgroundResource(R.drawable.star_empty);
+                                        starButtons[position][first_time_unfavorite_index].setBackgroundResource(R.drawable.star_empty);
                                     }
                                 })
                                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -454,7 +455,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                     }
                     else {
                         ((MyApplication) this.getApplication()).removeFavorite(position, i);
-                        starButtons[i].setBackgroundResource(R.drawable.star_empty);
+                        starButtons[position][i].setBackgroundResource(R.drawable.star_empty);
                     }
                 }
 
@@ -468,7 +469,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 .setPositiveButton("yes", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         ((MyApplication) Schedule.this.getApplication()).addFavorite(position, first_time_favorite_index);
-                                        starButtons[first_time_favorite_index].setBackgroundResource(R.drawable.star_full);
+                                        starButtons[position][first_time_favorite_index].setBackgroundResource(R.drawable.star_full);
                                     }
                                 })
                                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -481,11 +482,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                     }
                     else {
                         ((MyApplication) this.getApplication()).addFavorite(position, i);
-                        starButtons[i].setBackgroundResource(R.drawable.star_full);
+                        starButtons[position][i].setBackgroundResource(R.drawable.star_full);
                     }
                 }
             }
-        }*/
+        }
 
 
         }

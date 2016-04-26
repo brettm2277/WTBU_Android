@@ -3,7 +3,6 @@ package org.globalappinitiative.wtbutest;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,12 +32,6 @@ public class DonateActivity extends AppCompatActivity
 
     private WebView donate_page;
 
-    Handler handler = new Handler();    //used with the auto refresh runnable
-
-    String current_artist;
-    String current_title;
-    String artist_and_title;
-
     //onCreate runs when app first starts//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +59,6 @@ public class DonateActivity extends AppCompatActivity
 
     }
 
-
-
     // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
     private void initializeUI() {
 
@@ -91,8 +82,6 @@ public class DonateActivity extends AppCompatActivity
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
-
-        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
 
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
