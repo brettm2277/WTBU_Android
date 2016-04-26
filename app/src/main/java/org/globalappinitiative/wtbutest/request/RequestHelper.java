@@ -9,6 +9,9 @@ import java.util.Map;
  */
 class RequestHelper {
 
+    // This class adds parameters to urls so that specifying thinks like tokens and
+    // other get request parameters is easier. Volley only does this by default for
+    // POST and PUT requests.
     public static String buildUponURL(String url, Map<String, String> params) {
         if (params == null) {
             return url;

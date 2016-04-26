@@ -15,6 +15,8 @@ import java.util.Map;
 
 /**
  * Created by calvin on 4/26/16.
+ *
+ * A custom json request that is tuned for the API.
  */
 public class GetArrayRequest extends Request<JSONArray>{
 
