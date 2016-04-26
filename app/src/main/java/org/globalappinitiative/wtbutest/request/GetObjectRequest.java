@@ -1,7 +1,5 @@
 package org.globalappinitiative.wtbutest.request;
 
-import android.net.Uri;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;

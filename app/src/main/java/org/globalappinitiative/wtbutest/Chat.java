@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.globalappinitiative.wtbutest.request.RequestDelegate;
 import org.json.JSONArray;
@@ -90,6 +92,14 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                             for (ChatMessage chat : chats) {
                                 addChatBubble(chat);
                             }
+                            // Now scroll to the bottom of the scrollview so that the new message shows up
+                            pastMessages.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pastMessages.fullScroll(ScrollView.FOCUS_DOWN);
+                                }
+
+                            });
                         } catch (JSONException e) {
                             Log.d("JSONException", "Could not parse message JSON: " + e.getMessage());
                         }
@@ -116,15 +126,6 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         mLayout.addView(blank);
         mLayout.addView(tv);
         mLayout.addView(blank2);
-
-        // Now scroll to the bottom of the scrollview so that the new message shows up
-        pastMessages.post(new Runnable() {
-            @Override
-            public void run() {
-                pastMessages.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-
-        });
     }
 
     public void initializeUI() {
@@ -189,7 +190,16 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                                 buttonSignIn.setVisibility(View.INVISIBLE);
                                 // Make the text bar visible
                                 textBar.setVisibility(View.VISIBLE);
-                                pollForMessages();
+
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pollForMessages();
+                                        handler.postDelayed(this, 10000);
+                                    }
+                                }, 0);
+
                             } catch (JSONException e) {
                                 Log.d("JSON Exception", e.getMessage());
                             }
@@ -214,6 +224,13 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
                             }
                         });
                 addChatBubble(new ChatMessage(name, message, SystemClock.currentThreadTimeMillis()));
+                // Now scroll to the bottom of the scrollview so that the new message shows up
+                pastMessages.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        pastMessages.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
                 editTextMessage.setText("");
             }
         }

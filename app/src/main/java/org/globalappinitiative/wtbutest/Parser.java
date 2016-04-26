@@ -118,7 +118,7 @@ class ChatMessage implements Comparable<ChatMessage> {
     }
 
     public int compareTo(ChatMessage other) {
-        long ret = other.timestamp - timestamp;
+        long ret = timestamp - other.timestamp;
         if (ret > 0) return 1;
         if (ret < 0) return -1;
         return 0;
