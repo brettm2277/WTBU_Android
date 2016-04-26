@@ -17,26 +17,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.sinch.android.rtc.ClientRegistration;
-import com.sinch.android.rtc.PushPair;
-import com.sinch.android.rtc.Sinch;
-import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.SinchClientListener;
-import com.sinch.android.rtc.SinchError;
-import com.sinch.android.rtc.messaging.Message;
-import com.sinch.android.rtc.messaging.MessageClient;
-import com.sinch.android.rtc.messaging.MessageClientListener;
-import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
-import com.sinch.android.rtc.messaging.MessageFailureInfo;
-import com.sinch.android.rtc.messaging.WritableMessage;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Chat extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener{
+import java.util.HashMap;
+import java.util.Map;
 
+public class Chat extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    private static final String baseURL = "https://gaiwtbubackend.herokuapp.com/";
+    private static final String chatSessionURL = baseURL + "chatSession";
+    private static final String getMessagesURL = baseURL + "getMessages";
+    private static final String sendMessageURL = baseURL + "sendChatMessage";
 
     private EditText editTextName;
     private EditText editTextRecipient;
@@ -45,17 +44,11 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
     private Button buttonSignIn;
     private Button buttonSendMessage;
     private String name;
+    private String token;
     private String recipient;
     private ScrollView pastMessages;
     private String message;
     private LinearLayout textBar;
-
-    private static final String APP_KEY = "e6fd4b52-4e46-4335-8f39-b0045235ace7";
-    private static final String APP_SECRET = "XnBsdW4jh0+lrvRdOuzH2A==";
-    private static final String ENVIRONMENT = "sandbox.sinch.com";
-    private SinchClient sinchClient = null;
-    private MessageClient messageClient = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +75,6 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void initializeUI() {
         editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextRecipient = (EditText) findViewById(R.id.editTextRecipient);
-        editTextRecipient.setVisibility(View.INVISIBLE);
         editTextMessage = (EditText) findViewById(R.id.editTextMessage);
 
         pastMessages = (ScrollView) findViewById(R.id.pastMessages);
@@ -97,108 +88,6 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
         // Start off with the text bar for messaging invisible
         textBar.setVisibility(View.INVISIBLE);
         //spinnerRecipient.setVisibility(View.INVISIBLE);
-    }
-
-    public void setupSinch(String userName) {
-        sinchClient = Sinch.getSinchClientBuilder()
-                .context(this.getApplicationContext())
-                .applicationKey(APP_KEY)
-                .applicationSecret(APP_SECRET)
-                .environmentHost("sandbox.sinch.com")
-                .userId(userName)
-                .build();
-        sinchClient.setSupportMessaging(true);
-        sinchClient.setSupportActiveConnectionInBackground(true);
-        sinchClient.checkManifest();
-        sinchClient.addSinchClientListener(new SinchClientListener() {
-            @Override
-            public void onClientStarted(SinchClient sinchClient) {
-                sinchClient.startListeningOnActiveConnection();
-                Log.d("Sinch", "started");
-            }
-
-            @Override
-            public void onClientStopped(SinchClient sinchClient) {
-                Log.d("Sinch", "stopped");
-            }
-
-            @Override
-            public void onClientFailed(SinchClient sinchClient, SinchError sinchError) {
-                Log.d("Sinch", "failed");
-            }
-
-            @Override
-            public void onRegistrationCredentialsRequired(SinchClient sinchClient, ClientRegistration clientRegistration) {
-                Log.d("Sinch", "credentials required");
-            }
-
-            @Override
-            public void onLogMessage(int i, String s, String s1) {
-
-            }
-        });
-
-        sinchClient.start();
-        messageClient = sinchClient.getMessageClient();
-        messageClient.addMessageClientListener(new MessageClientListener() {
-            @Override
-            public void onIncomingMessage(MessageClient messageClient, Message message) {
-                Log.d("Sinch", "Message received");
-                Log.d("Message", message.getTextBody());
-
-                // Now store the message within the scroll view's linear layout child
-                LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);
-                TextView tv = new TextView(getApplicationContext());
-                // Put the user's message into the text view
-                tv.setText(message.getTextBody());
-                // Set the font color of the text view
-                tv.setTextColor(Color.parseColor("#FFFFFF"));
-                // Add a background image (the nine patch text bubble, the other one is called red bubble but it's actually gray)
-                tv.setBackgroundResource(R.drawable.actually_red_bubble);
-                // Set the size for the textview
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                TextView blank = new TextView(getApplicationContext());
-                blank.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
-                TextView blank2 = new TextView(getApplicationContext());
-                blank2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8);
-                // Add the text view to the layout
-                mLayout.addView(blank);
-                mLayout.addView(tv);
-                mLayout.addView(blank2);
-
-                // Now scroll to the bottom of the scrollview so that the new message shows up
-                pastMessages.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        pastMessages.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-
-                });
-            }
-
-            @Override
-            public void onMessageSent(MessageClient messageClient, Message message, String s) {
-                Log.d("Sinch", "Message sent");
-            }
-
-            @Override
-            public void onMessageFailed(MessageClient messageClient, Message message, MessageFailureInfo messageFailureInfo) {
-                Log.d("Sinch", "Failed to send to user: " + messageFailureInfo.getRecipientId()
-                        + " because: " + messageFailureInfo.getSinchError().getMessage());
-            }
-
-            @Override
-            public void onMessageDelivered(MessageClient messageClient, MessageDeliveryInfo messageDeliveryInfo) {
-                Log.d("Sinch", "The message with id " + messageDeliveryInfo.getMessageId()
-                        + " was delivered to the recipient with id " + messageDeliveryInfo.getRecipientId());
-            }
-
-            @Override
-            public void onShouldSendPushData(MessageClient messageClient, Message message, List<PushPair> list) {
-
-            }
-        });
-
     }
 
     @Override
@@ -227,27 +116,54 @@ public class Chat extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public void onClick(View view) {
         if (view == buttonSignIn) {
-            editTextRecipient.setVisibility(View.VISIBLE);
-            name = editTextName.getText().toString();
-            editTextName.setVisibility(View.INVISIBLE);
-            pastMessages.setVisibility(View.VISIBLE);
-            editTextMessage.setVisibility(View.VISIBLE);
-            buttonSendMessage.setVisibility(View.VISIBLE);
-            setupSinch(name);
-            buttonSignIn.setVisibility(View.INVISIBLE);
-            // Make the text bar visible
-            textBar.setVisibility(View.VISIBLE);
+            final String requestedName  = editTextName.getText().toString();
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("name", requestedName);
+            AppVolleyState.instance().getRequestQueue().add(new JSONGETRequest(chatSessionURL, map,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("JSON Object", response.toString());
+                            try {
+                                name = response.getString("name");
+                                token = response.getString("token");
+
+                                editTextRecipient.setVisibility(View.VISIBLE);
+                                editTextName.setVisibility(View.INVISIBLE);
+                                pastMessages.setVisibility(View.VISIBLE);
+                                editTextMessage.setVisibility(View.VISIBLE);
+                                buttonSendMessage.setVisibility(View.VISIBLE);
+                                buttonSignIn.setVisibility(View.INVISIBLE);
+                                // Make the text bar visible
+                                textBar.setVisibility(View.VISIBLE);
+                            } catch (JSONException e) {
+                                Log.d("JSON Exception", e.getMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Volley Error", error.getMessage());
+                        }
+                    }));
+            Log.d("Chat Session Request", "Chat session request sent to server.");
         }
         if (view == buttonSendMessage) {
             editTextMessage.setVisibility(View.VISIBLE);
-            recipient = editTextRecipient.getText().toString();
             message = editTextMessage.getText().toString();
-
-            // Only attempt to send the message if it contains something and the user has selected a recipient
-            if (message != "" && recipient != "") {
-                WritableMessage writableMessage = new WritableMessage(recipient, message);
-                Log.d("Sinch", "sending message");
-                messageClient.send(writableMessage);
+            // Only attempt to send the message if it contains something
+            if (message != "") {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("token", token);
+                map.put("message", message);
+                AppVolleyState.squickRequest(sendMessageURL, map,
+                        new AppVolleyState.SquickRequestDelegate() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                               // Do nothing for now, later check if successful.
+                                Log.d("Volley Response", response.toString());
+                            }
+                        });
 
                 // Get the id of the linear layout to place text into
                 LinearLayout mLayout = (LinearLayout) findViewById(R.id.childLayout);

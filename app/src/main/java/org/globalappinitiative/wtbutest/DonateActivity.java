@@ -3,7 +3,6 @@ package org.globalappinitiative.wtbutest;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,12 +31,6 @@ public class DonateActivity extends AppCompatActivity
     public TextView textView_song_name;
 
     private WebView donate_page;
-
-    Handler handler = new Handler();    //used with the auto refresh runnable
-
-    String current_artist;
-    String current_title;
-    String artist_and_title;
 
     //onCreate runs when app first starts//
     @Override

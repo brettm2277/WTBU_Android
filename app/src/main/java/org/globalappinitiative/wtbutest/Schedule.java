@@ -1,91 +1,44 @@
 package org.globalappinitiative.wtbutest;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.Collections;
+import java.util.List;
 
 public class Schedule extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -102,20 +55,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private ListView[] lists;
 
     private ArrayList<ArrayList<ScheduleItem>> schedule;
-
-    private boolean first_time = true;
-
-    private boolean first_time_favorite = true;
-
-    RequestQueue queue;
-
-    private int first_time_favorite_index;
-
-    private boolean first_time_unfavorite = true;
-
-    private int first_time_unfavorite_index;
-
-    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +136,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         textView_song_name.setMovementMethod(new ScrollingMovementMethod()); // Allows this to scroll if song name too long
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
-        queue = Volley.newRequestQueue(this);
     }
 
     @Override
@@ -247,8 +185,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private void getSchedule() {
         String url = "https://gaiwtbubackend.herokuapp.com/regularShowsInfo?SongID=1234";
 
-        queue.add(new JsonObjectRequest(Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
+        AppVolleyState.squickRequest(url, null,
+                new AppVolleyState.SquickRequestDelegate() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -280,13 +218,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                             e.printStackTrace();
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("VolleyError", error.toString());
-                    }
-                }));
+                });
     }
 
     //created by navigation drawer template. we can change it later for whatever we put in it
@@ -331,7 +263,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
-        this.position = position;
         // Hide all the scrollViews
         for (int i = 0; i < 7; i++) {
             lists[i].setVisibility(View.INVISIBLE);

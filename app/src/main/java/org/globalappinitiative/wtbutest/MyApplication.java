@@ -16,8 +16,6 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.parse.Parse;
-
 import java.io.IOException;
 
 /**
@@ -35,7 +33,6 @@ public class  MyApplication extends Application {
 
     private String artist_name;
     private String song_name;
-    final private String donate_url = "https://trusted.bu.edu/s/1759/2-bu/giving.aspx?sid=1759&gid=2&pgid=434&cid=1077&appealcode=WEBCOM"; // URL to link to a donation page
 
     private PendingIntent resultPendingIntent;
     private PendingIntent pendingIntentCancel;
@@ -55,10 +52,8 @@ public class  MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Enable Local data store.
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, "1YQrSQX8ISBBkVdXA2tgSmv0j2cBOx878Es5d5lD", "zplY28RZTzs5SqiUog33vcDlCIqP7FaJcVS28daA");
+        // Intialize Volley for this App.
+        AppVolleyState.initInstance(getApplicationContext());
 
         initializeMediaPlayer();
         preparePlayer();
