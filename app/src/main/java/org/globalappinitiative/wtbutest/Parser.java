@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,49 @@ class Song {
 
     public boolean isSameSong(Song s) { // Returns true if songs have the same title and author, false otherwise
         return (songTitle.equals(s.getTitle()) && artistName.equals(s.getArtist()));
+    }
+}
+
+class ChatMessage implements Comparable<ChatMessage> {
+    private String sender;
+    private String message;
+    private long timestamp;
+
+    public ChatMessage(String sender, String message, long timestamp) {
+        this.sender = sender;
+        this.message = message;
+        this.timestamp = timestamp;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public int compareTo(ChatMessage other) {
+        long ret = timestamp - other.timestamp;
+        if (ret > 0) return 1;
+        if (ret < 0) return -1;
+        return 0;
     }
 }
 

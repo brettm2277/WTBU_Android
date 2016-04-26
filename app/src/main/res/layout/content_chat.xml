@@ -8,18 +8,6 @@
     tools:context="org.globalappinitiative.wtbutest.Chat"
     android:background="@color/contentBkgColor">
 
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:id="@+id/editTextRecipient"
-        android:hint="DJ Name"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:background="#32323c"
-        android:textColor="#b9b8d2"
-        android:textColorHint="#b9b8d2"/>
-
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

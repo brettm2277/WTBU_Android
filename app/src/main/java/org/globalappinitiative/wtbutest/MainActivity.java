@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView album_art;
 
-    public RequestQueue queue;                 //used with volley, holds all of the requests (rss feed, album art)
-
     Handler handler = new Handler();    //used with the auto refresh runnable
 
     String currentSongName = "";
@@ -122,18 +120,13 @@ public class MainActivity extends AppCompatActivity
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
         textView_song_name.setMovementMethod(new ScrollingMovementMethod()); // Allows this to scroll if song name too long
         // Instantiate the RequestQueue.
-        queue = Volley.newRequestQueue(this);
 
-    }
-
-    public RequestQueue getRequestQueue() {
-        return queue;
     }
 
     private void getSongInfo() {
         String url = "https://gaiwtbubackend.herokuapp.com/song?SongID=1234";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
 
-        queue.add(new JsonObjectRequest(Request.Method.GET, url,
+        AppVolleyState.instance().getRequestQueue().add(new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -195,7 +188,7 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
-        queue.add(imageRequest);
+        AppVolleyState.instance().getRequestQueue().add(imageRequest);
     }
 
     public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art

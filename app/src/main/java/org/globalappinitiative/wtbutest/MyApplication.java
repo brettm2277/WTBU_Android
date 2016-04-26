@@ -16,8 +16,6 @@ import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.parse.Parse;
-
 import java.io.IOException;
 
 /**
@@ -35,7 +33,6 @@ public class  MyApplication extends Application {
 
     private String artist_name;
     private String song_name;
-    final private String donate_url = "https://trusted.bu.edu/s/1759/2-bu/giving.aspx?sid=1759&gid=2&pgid=434&cid=1077&appealcode=WEBCOM"; // URL to link to a donation page
 
     private PendingIntent resultPendingIntent;
     private PendingIntent pendingIntentCancel;
@@ -49,16 +46,15 @@ public class  MyApplication extends Application {
     private boolean ready_to_play = false;
     private boolean clicked_play = false;
 
-    private boolean [][] userFavorites = new boolean[7][10];
+
+    private boolean [][] userFavorites = new boolean[7][24];
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
-
-        Parse.initialize(this, "1YQrSQX8ISBBkVdXA2tgSmv0j2cBOx878Es5d5lD", "zplY28RZTzs5SqiUog33vcDlCIqP7FaJcVS28daA");
+        // Initialize Volley for this App.
+        AppVolleyState.initInstance(getApplicationContext());
 
         initializeMediaPlayer();
         preparePlayer();
@@ -280,7 +276,7 @@ public class  MyApplication extends Application {
 
         for (int day=0; day<7; day++)   //sunday = 0, saturday = 6
         {
-            for (int time = 0; time < 10; time++)   //0 = 6AM, 9 = 12AM on intervals of 2 hours
+            for (int time = 0; time < 24; time++)   //0 = 6AM, 9 = 12AM on intervals of 2 hours
             {
                 boolean fav = favorites.getBoolean(Integer.toString(day) + " " + Integer.toString(time), false);    //get whether or not that show is a favorite
                 userFavorites[day][time] = fav;     //add it to the userFavorites array
