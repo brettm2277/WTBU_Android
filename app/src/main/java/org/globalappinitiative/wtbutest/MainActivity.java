@@ -92,9 +92,6 @@ public class MainActivity extends AppCompatActivity
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
-
-
-    // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
     private void initializeUI() {
         album_art = (ImageView) findViewById(R.id.album_art);
 
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getSongInfo() {
-        String url = "https://gaiwtbubackend.herokuapp.com/song?SongID=1234";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
+        String url = "https://gaiwtbubackend.herokuapp.com/song";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
 
         AppVolleyState.instance().getRequestQueue().add(new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
