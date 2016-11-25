@@ -1,5 +1,8 @@
 package org.globalappinitiative.wtbutest;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity
 
     String currentSongName = "";
 
+    FragmentManager fragmentManager = getFragmentManager();
+
     Bitmap art;
 
     long songEnd = 0;
@@ -89,6 +94,8 @@ public class MainActivity extends AppCompatActivity
 
         getSongInfo();
 
+
+
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
@@ -121,7 +128,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void getSongInfo() {
-        String url = "https://gaiwtbubackend.herokuapp.com/song";        // SPINITRON is down at the time of writing this, so change to https://gaiwtbubackend.herokuapp.com/song when it's back online
+        String url = "https://gaiwtbubackend.herokuapp.com/song";
 
         AppVolleyState.instance().getRequestQueue().add(new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -235,8 +242,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_playing) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
 
+        if (id == R.id.nav_playing) {
+            fragment = new AlbumFragment();
+            title = "Now Playing";
         } else if (id == R.id.nav_schedule) {
             Intent intent = new Intent(this, Schedule.class);
             startActivity(intent);
@@ -248,6 +259,16 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);
+        }
+
+        if (fragment != null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.main_fragment, fragment);
+            fragmentTransaction.commit();
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

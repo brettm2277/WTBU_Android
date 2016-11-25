@@ -6,21 +6,15 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
-    tools:showIn="@layout/app_bar_main"
     android:background="@color/contentBkgColor">
 
-    <fragment
+    <ImageView
+        android:id="@+id/album_art"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/control_bar"
-        android:name="org.globalappinitiative.wtbutest.AlbumFragment"
-        android:id="@+id/main_fragment"
-        tools:layout="@layout/fragment_album" />
-
-    <include layout="@layout/app_bar_bottom" />
-
-
+        />
 
 </RelativeLayout>
