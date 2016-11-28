@@ -49,7 +49,6 @@ public class AlbumFragment extends Fragment {
 
     long songEnd = 0;
 
-    String current_artist;
     String current_title = "";
 
     private OnFragmentInteractionListener mListener;
@@ -94,6 +93,16 @@ public class AlbumFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         album_art = (ImageView) getView().findViewById(R.id.album_art); // Creates album art
+
+        //Log.d("Image URL: ", imageURL);
+        setAlbumArt(imageURL);
+        //getSongInfo();
+
+    }
+
+    public void changeURL(String newURL) {
+        imageURL = newURL;
+        setAlbumArt(imageURL);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -120,49 +129,6 @@ public class AlbumFragment extends Fragment {
         mListener = null;
     }
 
-    private void getSongInfo() {
-        String url = "https://gaiwtbubackend.herokuapp.com/song";
-
-        AppVolleyState.instance().getRequestQueue().add(new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Only do the rest of the parsing if the JSON does not contain errors
-                            if (!response.has("errors")) {
-                                // Get the results from the response JSON
-                                JSONObject resultsJSON = response.getJSONObject("results");
-                                // Now set the current artist and song title based on the results JSON
-                                String songTitle = resultsJSON.getString("SongName");
-                                if (!songTitle.equals(current_title)) {
-                                    current_title = songTitle;
-                                    // Get the album art JSON
-                                    JSONObject albumArtJSON = resultsJSON.getJSONObject("AlbumArt");
-                                    String artUrl = albumArtJSON.getString("1000x1000");
-                                    // Get the album art with another volley request
-                                    setAlbumArt(artUrl);
-                                    // Parse the start time out of the JSON
-                                    String date = resultsJSON.getString("Date");
-                                    String time = resultsJSON.getString("Timestamp");
-                                    Calendar c = Calendar.getInstance();
-                                    c.set(Integer.parseInt(date.substring(0, 3)), Integer.parseInt(date.substring(5, 6)), Integer.parseInt(date.substring(8, 9)),
-                                            Integer.parseInt(time.substring(0, 1)), Integer.parseInt(time.substring(3, 4)), Integer.parseInt(date.substring(6, 7)));
-                                    songEnd = c.getTimeInMillis() + Integer.parseInt(resultsJSON.getString("TrackTimeMillis"));
-                                }
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("VolleyError", error.toString());
-                    }
-                }));
-    }
-
     private void setAlbumArt(String url) {
         //url is the url for the album art given by the iTunes api
         ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {        //says ImageRequest is deprecated although it still works. May need a different solution
@@ -179,30 +145,6 @@ public class AlbumFragment extends Fragment {
                     }
                 });
         AppVolleyState.instance().getRequestQueue().add(imageRequest);
-    }
-
-
-    public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
-        @Override
-        public void run() {
-            if (songEnd < Calendar.getInstance().getTimeInMillis() ) {
-                album_art.setImageResource(R.drawable.cover_art_android);
-            }
-            getSongInfo();   //gets RSS data, which calls the getAlbumArtURL function, which calls the setAlbumArt function, refreshing the song/artist and album art
-            handler.postDelayed(this, 30000);   //will run again in 30 seconds
-        }
-    };
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        handler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
     /**

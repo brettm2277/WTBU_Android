@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity
     public TextView textView_artist_name;
     public TextView textView_song_name;
 
-    Handler handler = new Handler();    //used with the auto refresh runnable
+    public String artURL;
 
-    String currentSongName = "";
+    Handler handler = new Handler();    //used with the auto refresh runnable
 
     FragmentManager fragmentManager = getFragmentManager();
 
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity
 
     String current_artist;
     String current_title = "";
-    String artist_and_title;
 
     //onCreate runs when app first starts//
     @Override
@@ -93,6 +92,10 @@ public class MainActivity extends AppCompatActivity
         ((MyApplication) this.getApplication()).updateContext(MainActivity.this);
 
         ((MyApplication) this.getApplication()).createNotification(current_artist, current_title, art); //create notification
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment, new AlbumFragment(), "Album");
+        fragmentTransaction.commit();
 
         getSongInfo();
 
@@ -145,6 +148,20 @@ public class MainActivity extends AppCompatActivity
                                     ((MyApplication) MainActivity.this.getApplication()).setSongName(current_title);
                                     textView_artist_name.setText(current_artist);
                                     textView_song_name.setText(current_title);
+                                    // Get the album art JSON
+                                    JSONObject albumArtJSON = resultsJSON.getJSONObject("AlbumArt");
+                                    artURL = albumArtJSON.getString("1000x1000");
+
+                                    Log.d("Album: ",artURL);
+                                    // if AlbumFragment is visible show it
+                                    AlbumFragment f = (AlbumFragment)fragmentManager.findFragmentByTag("Album");
+
+                                    if (f != null && f.isVisible()) {
+                                        f.changeURL(artURL);
+                                    } else {
+                                        Log.d("s: ", "is null?");
+                                    }
+
                                     // Parse the start time out of the JSON
                                     String date = resultsJSON.getString("Date");
                                     String time = resultsJSON.getString("Timestamp");
@@ -180,7 +197,7 @@ public class MainActivity extends AppCompatActivity
     public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
         @Override
         public void run() {
-            getSongInfo();   //gets RSS data, which calls the getAlbumArtURL function, which calls the setAlbumArt function, refreshing the song/artist and album art
+            getSongInfo();   //gets RSS data, which calls the getAlbumArtURL function, refreshing the song/artist
             handler.postDelayed(this, 30000);   //will run again in 30 seconds
         }
     };
@@ -216,7 +233,7 @@ public class MainActivity extends AppCompatActivity
         String title = getString(R.string.app_name);
 
         if (id == R.id.nav_playing) {
-            fragment = new AlbumFragment();
+            if (artURL != null) fragment = AlbumFragment.newInstance(artURL); // attach artURL to this
             title = "Now Playing";
         } else if (id == R.id.nav_schedule) {
             fragment = new ScheduleFragment();
@@ -232,7 +249,11 @@ public class MainActivity extends AppCompatActivity
 
         if (fragment != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.main_fragment, fragment);
+            if (title.equals("Now Playing")) {
+                fragmentTransaction.replace(R.id.main_fragment, fragment, "Album");
+            } else {
+                fragmentTransaction.replace(R.id.main_fragment, fragment, "");
+            }
             fragmentTransaction.commit();
         }
 

@@ -104,8 +104,6 @@ public class ScheduleFragment extends Fragment {
             schedule.add(innerList);
         }
 
-        System.out.println("hi");
-
         lists = new ListView[7];
         lists[0] = (ListView) getView().findViewById(R.id.day_list_monday);
         lists[1] = (ListView) getView().findViewById(R.id.day_list_tuesday);
