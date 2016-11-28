@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -38,7 +39,10 @@ import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,
+        AlbumFragment.OnFragmentInteractionListener,
+        ScheduleFragment.OnFragmentInteractionListener,
+        DonateFragment.OnFragmentInteractionListener  {
 
     private ImageView buttonPlay;       //play button
     private ImageView buttonPause;      //pause button
@@ -47,8 +51,6 @@ public class MainActivity extends AppCompatActivity
 
     public TextView textView_artist_name;
     public TextView textView_song_name;
-
-    private ImageView album_art;
 
     Handler handler = new Handler();    //used with the auto refresh runnable
 
@@ -94,14 +96,10 @@ public class MainActivity extends AppCompatActivity
 
         getSongInfo();
 
-
-
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
 
     private void initializeUI() {
-        album_art = (ImageView) findViewById(R.id.album_art);
-
         buttonPlay = (ImageView) findViewById(R.id.buttonPlay);                                             //initializes play button
         buttonPlay.setOnClickListener(this);                                                                //sets click listener for the play button
 
@@ -117,8 +115,6 @@ public class MainActivity extends AppCompatActivity
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
-
-        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);                              //AudioManager allows for changing of volume
 
         textView_artist_name = (TextView) findViewById(R.id.textView_artist_name);
         textView_song_name = (TextView) findViewById(R.id.textView_song_name);
@@ -149,11 +145,6 @@ public class MainActivity extends AppCompatActivity
                                     ((MyApplication) MainActivity.this.getApplication()).setSongName(current_title);
                                     textView_artist_name.setText(current_artist);
                                     textView_song_name.setText(current_title);
-                                    // Get the album art JSON
-                                    JSONObject albumArtJSON = resultsJSON.getJSONObject("AlbumArt");
-                                    String artUrl = albumArtJSON.getString("1000x1000");
-                                    // Get the album art with another volley request
-                                    setAlbumArt(artUrl);
                                     // Parse the start time out of the JSON
                                     String date = resultsJSON.getString("Date");
                                     String time = resultsJSON.getString("Timestamp");
@@ -176,36 +167,6 @@ public class MainActivity extends AppCompatActivity
                 }));
     }
 
-    private void setAlbumArt(String url) {
-        //url is the url for the album art given by the iTunes api
-        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {        //says ImageRequest is deprecated although it still works. May need a different solution
-            @Override
-            public void onResponse(Bitmap response) {
-                art = response;
-                album_art.setImageBitmap(response);         //set image with album art if it worked
-                ((MyApplication) MainActivity.this.getApplication()).updateNotificationInfo(current_artist, current_title, art);    //update notification with new album art, song/title
-            }
-        }, 0, 0, null,
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            });
-        AppVolleyState.instance().getRequestQueue().add(imageRequest);
-    }
-
-    public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
-        @Override
-        public void run() {
-            if (songEnd < Calendar.getInstance().getTimeInMillis() ) {
-                album_art.setImageResource(R.drawable.cover_art_android);
-            }
-            getSongInfo();   //gets RSS data, which calls the getAlbumArtURL function, which calls the setAlbumArt function, refreshing the song/artist and album art
-            handler.postDelayed(this, 30000);   //will run again in 30 seconds
-        }
-    };
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -215,6 +176,14 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
+    public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
+        @Override
+        public void run() {
+            getSongInfo();   //gets RSS data, which calls the getAlbumArtURL function, which calls the setAlbumArt function, refreshing the song/artist and album art
+            handler.postDelayed(this, 30000);   //will run again in 30 seconds
+        }
+    };
 
     @Override
     public void onPause() {
@@ -227,6 +196,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -249,12 +219,11 @@ public class MainActivity extends AppCompatActivity
             fragment = new AlbumFragment();
             title = "Now Playing";
         } else if (id == R.id.nav_schedule) {
-            Intent intent = new Intent(this, Schedule.class);
-            startActivity(intent);
-
+            fragment = new ScheduleFragment();
+            title = "Schedule";
         } else if (id == R.id.nav_donate) {
-            Intent intent = new Intent(this, DonateActivity.class);
-            startActivity(intent);
+            fragment = new DonateFragment();
+            title = "Donate";
         }
         else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
@@ -288,5 +257,10 @@ public class MainActivity extends AppCompatActivity
             buttonPlay.setVisibility(View.VISIBLE);
             buttonPause.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri){
+        //you can leave it empty
     }
 }

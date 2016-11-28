@@ -45,15 +45,12 @@ public class AlbumFragment extends Fragment {
 
     Handler handler = new Handler();    //used with the auto refresh runnable
 
-    String currentSongName = "";
-
     Bitmap art;
 
     long songEnd = 0;
 
     String current_artist;
     String current_title = "";
-    String artist_and_title;
 
     private OnFragmentInteractionListener mListener;
 
@@ -138,7 +135,6 @@ public class AlbumFragment extends Fragment {
                                 // Now set the current artist and song title based on the results JSON
                                 String songTitle = resultsJSON.getString("SongName");
                                 if (!songTitle.equals(current_title)) {
-                                    current_artist = resultsJSON.getString("ArtistName");
                                     current_title = songTitle;
                                     // Get the album art JSON
                                     JSONObject albumArtJSON = resultsJSON.getJSONObject("AlbumArt");
@@ -185,6 +181,7 @@ public class AlbumFragment extends Fragment {
         AppVolleyState.instance().getRequestQueue().add(imageRequest);
     }
 
+
     public Runnable runnable = new Runnable() {         //runs every 30 seconds, refreshes song/artist and album art
         @Override
         public void run() {
@@ -195,6 +192,18 @@ public class AlbumFragment extends Fragment {
             handler.postDelayed(this, 30000);   //will run again in 30 seconds
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.postDelayed(runnable, 30000);   //Runnable will run after 30000 milliseconds, or 30 seconds
+    }
 
     /**
      * This interface must be implemented by activities that contain this

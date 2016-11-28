@@ -59,7 +59,6 @@ public class DonateActivity extends AppCompatActivity
 
     }
 
-    // NEEDS TO BE PRIVATE (WHO KNOWS WHY?)
     private void initializeUI() {
 
         donate_page = (WebView) findViewById(R.id.webview); // load webview
