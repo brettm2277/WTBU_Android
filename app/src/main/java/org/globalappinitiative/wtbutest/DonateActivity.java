@@ -124,10 +124,12 @@ public class DonateActivity extends AppCompatActivity
         } else if (id == R.id.nav_donate) {
             // do nothing
         }
+        /*
         else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);
         }
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

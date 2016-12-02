@@ -241,10 +241,13 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         } else if (id == R.id.nav_donate) {
             Intent intent = new Intent(this, DonateActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_chat) {
+        }
+        /*
+        else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);
         }
+        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

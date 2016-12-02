@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.VolleyError;
 
 import org.globalappinitiative.wtbutest.request.RequestDelegate;
 import org.json.JSONArray;
@@ -20,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -104,6 +109,55 @@ public class ScheduleFragment extends Fragment {
             schedule.add(innerList);
         }
 
+        getSchedule();
+    }
+
+    private void getSchedule() {
+        String url = "https://gaiwtbubackend.herokuapp.com/regularShowsInfo?SongID=1234";
+        AppVolleyState.sobjectRequest(url, null,
+            new RequestDelegate<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                         // Get the results from the response JSON
+                         JSONArray resultsJSON = response.getJSONArray("results");
+                         // Now iterate through the results and add them to the programming list
+                         for (int i = 0; i < resultsJSON.length(); i++) {
+                             JSONObject result = resultsJSON.getJSONObject(i);
+                             // Get the show name from the result json
+                             String showName = result.getString("ShowName");
+                             // Get the show time as well. Stored in the JSON in the form: hr:mim:sec, just need to convert the hours (first two characters) to an integer
+                             int showTime = Integer.parseInt(result.getString("OnairTime").substring(0, 2)); // <--- Why is the end index exclusive? Is this a standard Java thing?
+                             // If the showtime is at midnight (0 hours), set it to 24 for the purposes of sorting
+                             // The same show can occur multiple times per week, so be sure to add all of them. Begin by getting the JSON array of weekdays
+                             JSONArray weekdays = result.getJSONArray("Weekdays");
+                             // Now for each entry in weekdays:
+                             for (int j = 0; j < weekdays.length(); j++) {
+                                 String weekday = weekdays.getString(j);
+                                 // Now finally construct the ScheduleItem from the parsed data
+                                 ScheduleItem program = new ScheduleItem(weekday, showTime, showName);
+                                 schedule.get(program.getDayOfWeek()).add(program);
+                             }
+                         }
+                         // Sort the shows for each day
+                         for (int i = 0; i < 7; i++) {
+                            Collections.sort(schedule.get(i));
+                         }
+                         populateViews();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast errorMsg = Toast.makeText(getActivity(), "Error loading schedule data. Please check connection", Toast.LENGTH_SHORT);
+                    errorMsg.show();
+                }
+            });
+    }
+
+    private void populateViews() {
         lists = new ListView[7];
         lists[0] = (ListView) getView().findViewById(R.id.day_list_monday);
         lists[1] = (ListView) getView().findViewById(R.id.day_list_tuesday);
@@ -113,7 +167,6 @@ public class ScheduleFragment extends Fragment {
         lists[5] = (ListView) getView().findViewById(R.id.day_list_saturday);
         lists[6] = (ListView) getView().findViewById(R.id.day_list_sunday);
 
-        getSchedule();
         for (int i = 0; i < 7; i++) {
             lists[i].setAdapter(new ScheduleFragment.customListAdapter(getActivity(), schedule.get(i)));
             lists[i].setVisibility(View.INVISIBLE);
@@ -134,46 +187,9 @@ public class ScheduleFragment extends Fragment {
             });
         }
 
-        lists[0].setVisibility(View.VISIBLE);
-    }
+        int dayOfWeekIndex = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)-1;
+        lists[dayOfWeekIndex].setVisibility(View.VISIBLE);
 
-    private void getSchedule() {
-        String url = "https://gaiwtbubackend.herokuapp.com/regularShowsInfo?SongID=1234";
-
-        AppVolleyState.sobjectRequest(url, null,
-                new RequestDelegate<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // Get the results from the response JSON
-                            JSONArray resultsJSON = response.getJSONArray("results");
-                            // Now iterate through the results and add them to the programming list
-                            for (int i = 0; i < resultsJSON.length(); i++) {
-                                JSONObject result = resultsJSON.getJSONObject(i);
-                                // Get the show name from the result json
-                                String showName = result.getString("ShowName");
-                                // Get the show time as well. Stored in the JSON in the form: hr:mim:sec, just need to convert the hours (first two characters) to an integer
-                                int showTime = Integer.parseInt(result.getString("OnairTime").substring(0, 2)); // <--- Why is the end index exclusive? Is this a standard Java thing?
-                                // If the showtime is at midnight (0 hours), set it to 24 for the purposes of sorting
-                                // The same show can occur multiple times per week, so be sure to add all of them. Begin by getting the JSON array of weekdays
-                                JSONArray weekdays = result.getJSONArray("Weekdays");
-                                // Now for each entry in weekdays:
-                                for (int j = 0; j < weekdays.length(); j++) {
-                                    String weekday = weekdays.getString(j);
-                                    // Now finally construct the ScheduleItem from the parsed data
-                                    ScheduleItem program = new ScheduleItem(weekday, showTime, showName);
-                                    schedule.get(program.getDayOfWeek()).add(program);
-                                }
-                            }
-                            // Sort the shows for each day
-                            for (int i = 0; i < 7; i++) {
-                                Collections.sort(schedule.get(i));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
     }
 
 
@@ -251,7 +267,11 @@ public class ScheduleFragment extends Fragment {
             ScheduleItem show = (ScheduleItem) getItem(position);
             TextView hour = (TextView) convertView.findViewById(R.id.schedule_entry_hour);
             TextView name = (TextView) convertView.findViewById(R.id.schedule_entry_text);
-            hour.setText(Integer.toString(show.getShowTime()));
+            if (DateFormat.is24HourFormat(getContext())) {
+                hour.setText(Integer.toString(show.getShowTime()));
+            } else {
+                hour.setText(show.getFullShowTime());
+            }
             name.setText(show.getTitle());
 
             ImageView starImage = (ImageView) convertView.findViewById(R.id.schedule_entry_star);
@@ -265,5 +285,4 @@ public class ScheduleFragment extends Fragment {
             return convertView;
         }
     }
-
 }

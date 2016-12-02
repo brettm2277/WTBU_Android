@@ -242,11 +242,12 @@ public class MainActivity extends AppCompatActivity
             fragment = new DonateFragment();
             title = "Donate";
         }
+        /*
         else if (id == R.id.nav_chat) {
             Intent intent = new Intent(this, Chat.class);
             startActivity(intent);
         }
-
+        */
         if (fragment != null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             if (title.equals("Now Playing")) {

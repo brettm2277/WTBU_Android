@@ -16,7 +16,7 @@
             android:title="Donate" />
 
     </group>
-
+    <!--
     <item android:title="Communicate">
         <menu>
             <item
@@ -25,5 +25,5 @@
                 android:title="Chat" />
         </menu>
     </item>
-
+    -->
 </menu>

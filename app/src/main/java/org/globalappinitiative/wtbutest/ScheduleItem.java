@@ -7,6 +7,7 @@ public class ScheduleItem implements Comparable<ScheduleItem> {
 
     private int dayOfWeek;   // Day of the week converted to string
     private int showTime; // Time of the show
+    private String showTimeAMPM; // Time + AM or PM
     private String title;    // Title of the show
 
     public ScheduleItem(String weekday, int showTime, String title) {
@@ -36,6 +37,13 @@ public class ScheduleItem implements Comparable<ScheduleItem> {
                 dayOfWeek = -1;
         }
         this.showTime = showTime;
+        if (showTime-12 >= 0) {
+            if (showTime == 12) showTimeAMPM = (showTime)+" PM";
+            else showTimeAMPM = (showTime-12)+" PM";
+        } else {
+            if (showTime == 0) showTimeAMPM = (showTime+12)+" AM";
+            else showTimeAMPM = showTime +" AM";
+        }
         this.title = title;
     }
 
@@ -49,6 +57,10 @@ public class ScheduleItem implements Comparable<ScheduleItem> {
 
     public int getShowTime() {
         return showTime;
+    }
+
+    public String getFullShowTime() {
+        return showTimeAMPM;
     }
 
     @Override
