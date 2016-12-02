@@ -5,10 +5,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,7 +42,8 @@ import java.util.List;
  * Use the {@link ScheduleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment
+    implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -86,6 +92,9 @@ public class ScheduleFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        lists = new ListView[7];
+
+        setHasOptionsMenu(true); // calls onCreateOptionsMenu
     }
 
     @Override
@@ -103,7 +112,16 @@ public class ScheduleFragment extends Fragment {
     }
 
     protected void initializeUI() {
+        lists[0] = (ListView) getView().findViewById(R.id.day_list_monday);
+        lists[1] = (ListView) getView().findViewById(R.id.day_list_tuesday);
+        lists[2] = (ListView) getView().findViewById(R.id.day_list_wednesday);
+        lists[3] = (ListView) getView().findViewById(R.id.day_list_thursday);
+        lists[4] = (ListView) getView().findViewById(R.id.day_list_friday);
+        lists[5] = (ListView) getView().findViewById(R.id.day_list_saturday);
+        lists[6] = (ListView) getView().findViewById(R.id.day_list_sunday);
+
         schedule = new ArrayList<>();
+
         for (int i = 0; i < 7; i++) {
             ArrayList<ScheduleItem> innerList = new ArrayList<ScheduleItem>();
             schedule.add(innerList);
@@ -158,15 +176,6 @@ public class ScheduleFragment extends Fragment {
     }
 
     private void populateViews() {
-        lists = new ListView[7];
-        lists[0] = (ListView) getView().findViewById(R.id.day_list_monday);
-        lists[1] = (ListView) getView().findViewById(R.id.day_list_tuesday);
-        lists[2] = (ListView) getView().findViewById(R.id.day_list_wednesday);
-        lists[3] = (ListView) getView().findViewById(R.id.day_list_thursday);
-        lists[4] = (ListView) getView().findViewById(R.id.day_list_friday);
-        lists[5] = (ListView) getView().findViewById(R.id.day_list_saturday);
-        lists[6] = (ListView) getView().findViewById(R.id.day_list_sunday);
-
         for (int i = 0; i < 7; i++) {
             lists[i].setAdapter(new ScheduleFragment.customListAdapter(getActivity(), schedule.get(i)));
             lists[i].setVisibility(View.INVISIBLE);
@@ -192,6 +201,40 @@ public class ScheduleFragment extends Fragment {
 
     }
 
+    public void setupSpinner(Spinner spinner) {
+        String[] items = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        //wrap the items in the Adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(R.layout.spinner_text);
+
+        //assign adapter to the Spinner
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_WEEK);  //sunday = 1, saturday = 7
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        // TODO: setCurrentProgramRed(hour);
+        Log.d("Hour", Integer.toString(hour));
+        Log.d("Day", Integer.toString(day));
+        spinner.setSelection(day - 1);
+        position = day - 1;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
+        // Hide all the scrollViews
+        for (int i = 0; i < 7; i++) {
+            lists[i].setVisibility(View.INVISIBLE);
+        }
+        // Show the one that corresponds to the position (which for some reason does not begin at zero)
+        lists[position].setVisibility(View.VISIBLE);
+        this.position = position;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -209,6 +252,15 @@ public class ScheduleFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.schedule_menu, menu);
+        MenuItem mitem = menu.findItem(R.id.item1);
+        spinner = (Spinner) mitem.getActionView();
+        setupSpinner(spinner);
     }
 
     @Override
