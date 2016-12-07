@@ -30,24 +30,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-            android:name=".Schedule"
-            android:label="@string/title_activity_schedule"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".DonateActivity"
-            android:label="@string/title_activity_donate"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver android:name=".NotificationReceiver" />
-
-        <activity
-            android:name=".Chat"
-            android:label="@string/title_activity_chat"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".KillNotificationsService" />
 
