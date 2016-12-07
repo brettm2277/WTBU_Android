@@ -1,4 +1,4 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 /**
  * Created by Edward on 2/22/2016.

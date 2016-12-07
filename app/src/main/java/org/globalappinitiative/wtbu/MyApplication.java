@@ -1,4 +1,4 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -86,7 +85,6 @@ public class  MyApplication extends Application {
             player.setDataSource("http://wtbu.bu.edu:1800/listen");
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("Error", e.toString());
         }
 
     }
@@ -190,12 +188,10 @@ public class  MyApplication extends Application {
     }
 
     public void setArtistName(String name) {
-        Log.d("Artist Name: ", name);
         artist_name = name;
     }
 
     public void setSongName(String name) {
-        Log.d("Song Name: ", name);
         song_name = name;
     }
 
@@ -234,7 +230,6 @@ public class  MyApplication extends Application {
                 resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 pendingIntentCancel = PendingIntent.getBroadcast(context, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                Log.d("Service", "builder");
                 mBuilder = new NotificationCompat.Builder(context);    //build notification
                 mBuilder.setSmallIcon(R.drawable.ic_play_arrow_white_24dp)
                         .setLargeIcon(art)
@@ -263,7 +258,6 @@ public class  MyApplication extends Application {
     }
 
     public void updateNotificationInfo(String artist, String title, Bitmap art) {           //updates the notification with new album art and artist/song
-        Log.d("Update", "notification");
         mBuilder.setLargeIcon(art)
                 .setContentText(artist)
                 .setSubText(title)
@@ -280,14 +274,12 @@ public class  MyApplication extends Application {
             {
                 boolean fav = favorites.getBoolean(Integer.toString(day) + " " + Integer.toString(time), false);    //get whether or not that show is a favorite
                 userFavorites[day][time] = fav;     //add it to the userFavorites array
-                Log.d(Integer.toString(day) + " " + Integer.toString(time), Boolean.toString(fav));
             }
         }
     }
 
 
     public void addFavorite(int day, int time) {    //called when the user stars a new show
-        Log.d("Favorite", "Added");
         SharedPreferences favorites = getSharedPreferences("FavoritesFile", 0);     //get FavoritesFile
         SharedPreferences.Editor editor = favorites.edit();
 

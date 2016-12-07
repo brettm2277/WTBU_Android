@@ -1,23 +1,9 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
-import android.util.Log;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by evanbowman on 11/10/15.

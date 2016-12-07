@@ -1,9 +1,8 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -25,12 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,14 +148,11 @@ public class MainActivity extends AppCompatActivity
                                     JSONObject albumArtJSON = resultsJSON.getJSONObject("AlbumArt");
                                     artURL = albumArtJSON.getString("1000x1000");
 
-                                    Log.d("Album: ",artURL);
                                     // if AlbumFragment is visible show it
                                     AlbumFragment f = (AlbumFragment)fragmentManager.findFragmentByTag("Album");
 
                                     if (f != null && f.isVisible()) {
                                         f.changeURL(artURL);
-                                    } else {
-                                        Log.d("s: ", "is null?");
                                     }
 
                                     // Parse the start time out of the JSON

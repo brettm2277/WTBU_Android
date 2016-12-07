@@ -1,12 +1,9 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +11,6 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebViewFragment;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 
 /**
@@ -64,6 +58,9 @@ public class DonateFragment extends Fragment {
         });
         mWebView.setWebViewClient(new InnerWebViewClient()); // forces it to open in app
         mWebView.loadUrl(mUrl);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mWebView.setWebContentsDebuggingEnabled(false);
+        }
         mIsWebViewAvailable = true;
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -76,7 +73,6 @@ public class DonateFragment extends Fragment {
      */
     public void loadUrl(String url) {
         if (mIsWebViewAvailable) getWebView().loadUrl(mUrl = url);
-        else Log.w("ImprovedWebViewFragment", "WebView cannot be found. Check the view and fragment have been loaded.");
     }
 
     /**

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.globalappinitiative.wtbutest">
+    package="org.globalappinitiative.wtbu">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:name=".MyApplication"
+        android:name="org.globalappinitiative.wtbu.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/splash_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name="org.globalappinitiative.wtbu.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
@@ -25,24 +25,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="org.globalappinitiative.wtbu.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <receiver android:name=".NotificationReceiver" />
+        <receiver android:name="org.globalappinitiative.wtbu.NotificationReceiver" />
 
-        <service android:name=".KillNotificationsService" />
+        <service android:name="org.globalappinitiative.wtbu.KillNotificationsService" />
 
-        <service android:name=".MyService">
+        <service android:name="org.globalappinitiative.wtbu.MyService">
             <intent-filter>
                 <action android:name="your.package.MyService" />
             </intent-filter>
         </service>
 
         <receiver
-            android:name=".BootReceiver"
+            android:name="org.globalappinitiative.wtbu.BootReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="BootReceiver">
@@ -51,7 +51,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:process=":remote" android:name="AlarmReceiver"></receiver>
+        <receiver android:process=":remote" android:name="org.globalappinitiative.wtbu.AlarmReceiver"></receiver>
 
 
     </application>

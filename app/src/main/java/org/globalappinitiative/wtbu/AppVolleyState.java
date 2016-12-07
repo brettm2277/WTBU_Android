@@ -1,16 +1,13 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
-import org.globalappinitiative.wtbutest.request.GetArrayRequest;
-import org.globalappinitiative.wtbutest.request.GetObjectRequest;
-import org.globalappinitiative.wtbutest.request.RequestDelegate;
+import org.globalappinitiative.wtbu.request.GetArrayRequest;
+import org.globalappinitiative.wtbu.request.GetObjectRequest;
+import org.globalappinitiative.wtbu.request.RequestDelegate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

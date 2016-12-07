@@ -1,6 +1,4 @@
-package org.globalappinitiative.wtbutest.request;
-
-import android.util.Log;
+package org.globalappinitiative.wtbu.request;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -12,7 +10,6 @@ public abstract class RequestDelegate<T> implements Response.Listener<T>, Respon
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e("VolleyError", error.toString());
     }
 
 }

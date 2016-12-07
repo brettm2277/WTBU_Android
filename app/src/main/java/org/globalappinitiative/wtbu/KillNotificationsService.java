@@ -1,4 +1,4 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.NotificationManager;
 import android.app.Service;

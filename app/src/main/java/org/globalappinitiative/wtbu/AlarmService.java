@@ -1,11 +1,10 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +27,6 @@ public class AlarmService {
         SharedPreferences favorites = context.getSharedPreferences("FavoritesFile", 0);     //load the list of which shows are favorites
         int request_code = 0;   //each alarm needs a different request code to be separate, so this gets incremented for each possible show
         Calendar now = Calendar.getInstance();  //get current time
-        Log.d("Day and Time Now", Integer.toString(now.get(Calendar.DAY_OF_WEEK)) + " " + Integer.toString(now.get(Calendar.HOUR_OF_DAY)));
-
 
         for (int day = 0; day < 7; day++) {
             for (int time = 0; time < 24; time++) {

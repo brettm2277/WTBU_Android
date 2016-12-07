@@ -1,4 +1,4 @@
-package org.globalappinitiative.wtbutest.request;
+package org.globalappinitiative.wtbu.request;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;

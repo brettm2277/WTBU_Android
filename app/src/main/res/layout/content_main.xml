@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/control_bar"
-        android:name="org.globalappinitiative.wtbutest.AlbumFragment"
+        android:name="org.globalappinitiative.wtbu.AlbumFragment"
         android:id="@+id/main_fragment"
         tools:layout="@layout/fragment_album" />
 

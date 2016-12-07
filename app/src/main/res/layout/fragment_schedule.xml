@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="org.globalappinitiative.wtbutest.Schedule"
+    tools:context="org.globalappinitiative.wtbu.Schedule"
     android:background="@color/contentBkgColor">
 
     <ListView

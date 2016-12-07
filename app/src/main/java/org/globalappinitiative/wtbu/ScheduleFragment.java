@@ -1,11 +1,10 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import org.globalappinitiative.wtbutest.request.RequestDelegate;
+import org.globalappinitiative.wtbu.request.RequestDelegate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -213,9 +212,6 @@ public class ScheduleFragment extends Fragment
         Calendar c = Calendar.getInstance();
         int day = c.get(Calendar.DAY_OF_WEEK);  //sunday = 1, saturday = 7
         int hour = c.get(Calendar.HOUR_OF_DAY);
-        // TODO: setCurrentProgramRed(hour);
-        Log.d("Hour", Integer.toString(hour));
-        Log.d("Day", Integer.toString(day));
         spinner.setSelection(day - 1);
         position = day - 1;
     }

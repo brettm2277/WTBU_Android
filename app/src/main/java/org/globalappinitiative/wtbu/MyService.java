@@ -1,10 +1,9 @@
-package org.globalappinitiative.wtbutest;
+package org.globalappinitiative.wtbu;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 /**
  * Created by BrettM on 3/19/2016.
@@ -18,7 +17,6 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //start tasks
-        Log.d("Notification Service", "started");
         alarmService = new AlarmService(getApplicationContext());
         alarmService.startAlarm();
 
@@ -28,7 +26,6 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         //stop tasks
-        Log.d("Notification Service", "ended");
         super.onDestroy();
     }
 
