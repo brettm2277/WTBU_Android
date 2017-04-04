@@ -44,7 +44,7 @@ public class ScheduleItem implements Comparable<ScheduleItem> {
             if (showTime == 0) showTimeAMPM = (showTime+12)+" AM";
             else showTimeAMPM = showTime +" AM";
         }
-        this.title = title;
+        this.title = title.replaceAll("&quot;", "\""); // replace this character with quotation marks
     }
 
     public int getDayOfWeek() {

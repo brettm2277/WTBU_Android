@@ -86,7 +86,6 @@ public class  MyApplication extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void preparePlayer() {       //gets player ready in the background
